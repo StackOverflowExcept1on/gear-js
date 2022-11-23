@@ -2,13 +2,13 @@ FROM node:18-alpine AS builder
 
 WORKDIR /src
 
+COPY ./utils/ ./utils
 COPY package.json .
 COPY yarn.lock .
 COPY tsconfig.json .
 COPY .yarnrc.yml .
 COPY .yarn .yarn
 COPY ./idea/frontend ./idea/frontend
-COPY ./utils ./utils
 
 RUN yarn install --mode=skip-build
 
