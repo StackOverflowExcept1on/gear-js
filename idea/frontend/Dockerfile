@@ -1,7 +1,5 @@
 FROM node:18-alpine AS builder
 
-WORKDIR /src
-
 COPY package.json .
 COPY yarn.lock .
 COPY tsconfig.json .
@@ -10,6 +8,8 @@ COPY .yarn .yarn
 COPY ./idea/frontend ./idea/frontend
 COPY ./utils/gear-hooks ./utils/gear-hooks
 COPY ./utils/gear-ui ./utils/gear-ui
+
+WORKDIR /src
 
 RUN yarn install --mode=skip-build
 
