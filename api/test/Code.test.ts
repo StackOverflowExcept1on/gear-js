@@ -2,10 +2,10 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 
 import { getAccount, sendTransaction, sleep } from './utilsFunctions';
-import { GearApi, Hex } from '../src';
+import { Gear, GearApi, Hex } from '../src';
 import { GEAR_EXAMPLES_WASM_DIR } from './config';
 
-const api = new GearApi();
+const api: Gear.Api = new GearApi();
 const accounts = {};
 const code = readFileSync(join(GEAR_EXAMPLES_WASM_DIR, 'demo_sum.opt.wasm'));
 let codeId: Hex;

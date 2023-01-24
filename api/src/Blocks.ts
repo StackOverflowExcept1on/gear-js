@@ -18,28 +18,6 @@ export class GearBlock {
   constructor(private api: GearApi) {
     this.subscribeNewHeads = api.derive.chain.subscribeNewHeads;
   }
-
-  /**
-   * Get data of particular block by blockHash
-   * @param hash
-   * @returns
-   */
-  async get(hash: Hex | Uint8Array): Promise<SignedBlock>;
-
-  /**
-   * Get data of particular block by blockNumber
-   * @param number
-   * @returns
-   */
-  async get(number: number): Promise<SignedBlock>;
-
-  /**
-   * Get data of particular block by blockNumber or blockHash
-   * @param hashOrNumber
-   * @returns
-   */
-  async get(hashOrNumber: Hex | Uint8Array | number): Promise<SignedBlock>;
-
   /**
    * Get data of particular block by blockNumber or blockHash
    * @param hashOrNumber
@@ -72,24 +50,6 @@ export class GearBlock {
     const block = await this.get(hash);
     return block.block.header.number;
   }
-
-  /**
-   * ### Get block's timestamp
-   * @param block
-   */
-  async getBlockTimestamp(block: SignedBlock): Promise<Compact<u64>>;
-
-  /**
-   * ### Get block's timestamp by blockHash
-   * @param hash
-   */
-  async getBlockTimestamp(hash: Hex | Uint8Array): Promise<Compact<u64>>;
-
-  /**
-   * ### Get block's timestamp by blockNumber
-   * @param number
-   */
-  async getBlockTimestamp(number: number): Promise<Compact<u64>>;
 
   async getBlockTimestamp(blockOrHashOrNumber: Hex | Uint8Array | number | SignedBlock): Promise<Compact<u64>> {
     const block =

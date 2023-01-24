@@ -1,5 +1,6 @@
 import { Enum, u32, Map, BTreeSet, BTreeMap } from '@polkadot/types';
 import { Hash } from '@polkadot/types/interfaces';
+import { HexString } from '@polkadot/util/types';
 
 import { MessageId, ProgramId } from '../ids';
 import { GasReservationSlot } from '../gas';
@@ -31,4 +32,9 @@ export interface IProgramState {
   asUninitialized: { messageId: MessageId };
   isInitialized: boolean;
   asInitialized: null;
+}
+
+export interface ReadStateArgs {
+  programId: HexString;
+  at?: HexString;
 }

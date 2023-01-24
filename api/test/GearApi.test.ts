@@ -1,7 +1,7 @@
-import { GearApi } from '../src';
+import { Gear, GearApi } from '../src';
 import { sleep } from './utilsFunctions';
 
-const api = new GearApi();
+const api: Gear.Api = new GearApi();
 
 beforeAll(async () => {
   try {

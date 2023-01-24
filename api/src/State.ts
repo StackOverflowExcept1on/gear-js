@@ -6,12 +6,7 @@ import { getWasmMetadata, readState } from './wasm';
 import { CreateType } from './create-type';
 import { ReadStateError } from './errors';
 import { GearStorage } from './Storage';
-import { OldMetadata } from './types';
-
-interface ReadStateArgs {
-  programId: HexString;
-  at?: HexString;
-}
+import { OldMetadata, ReadStateArgs } from './types';
 
 export class GearProgramState extends GearStorage {
   private async newRead(
@@ -119,22 +114,6 @@ export class GearProgramState extends GearStorage {
 
     return this.decodeState(state, metadata);
   }
-
-  /**
-   * Read state of particular program
-   * @param programId
-   * @param metaWasm - file with metadata
-   * @returns decoded state
-   */
-  read(programId: HexString, metaWasm: Buffer, inputValue?: AnyJson): Promise<Codec>;
-
-  /**
-   *
-   * @param args ProgramId and hash of block where it's necessary to read state (optional)
-   * @param meta Program metadata returned from getProgramMetadata function
-   * @param type (optional) Index of type to decode state. metadata.types.state is uesd by default
-   */
-  read(args: ReadStateArgs, meta: ProgramMetadata, type?: number): Promise<Codec>;
 
   read<S extends HexString | ReadStateArgs = HexString | ReadStateArgs>(
     programIdOrArgs: S,

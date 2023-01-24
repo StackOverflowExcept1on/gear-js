@@ -6,9 +6,9 @@ import { join } from 'path';
 
 import { TARGET } from './config';
 import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
-import { GearApi, getProgramMetadata } from '../src';
+import { Gear, GearApi, getProgramMetadata } from '../src';
 
-const api = new GearApi();
+const api: Gear.Api = new GearApi();
 let alice: KeyringPair;
 let codeId: HexString;
 let programId: HexString;
