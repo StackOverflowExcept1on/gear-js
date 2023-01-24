@@ -4,6 +4,15 @@ import { SignedBlock } from '@polkadot/types/interfaces';
 import { HexString } from '@polkadot/util/types';
 import { Compact, u64 } from '@polkadot/types';
 
+import { ProgramMetadata } from '../metadata';
+import { GearProgramState } from '../State';
+import { GearWaitlist } from '../Waitlist';
+import { GearMessage } from '../Message';
+import { GearMailbox } from '../Mailbox';
+import { GearProgram } from '../Program';
+import { GearBlock } from '../Blocks';
+import { GearApi } from '../GearApi';
+import { GearGas } from '../Gas';
 import {
   GasInfo,
   IMessageSendOptions,
@@ -19,15 +28,6 @@ import {
   Value,
   WaitlistItem,
 } from '../types';
-import { ProgramMetadata } from '../metadata';
-import { GearProgramState } from '../State';
-import { GearMessage } from '../Message';
-import { GearMailbox } from '../Mailbox';
-import { GearProgram } from '../Program';
-import { GearApi } from '../GearApi';
-import { GearWaitlist } from '../Waitlist';
-import { GearGas } from '../Gas';
-import { GearBlock } from '../Blocks';
 
 export module Gear {
   export declare class Api extends GearApi {
@@ -37,6 +37,7 @@ export module Gear {
     programState: ProgramState;
     waitlist: Waitlist;
     gas: Gas;
+    block: Block;
   }
 
   export declare class Program extends GearProgram {
