@@ -97,7 +97,7 @@ describe('Gear Message', () => {
 
   test('Read mailbox with message id', async () => {
     expect(messageToClaim).toBeDefined();
-    const mailbox = await api.mailbox.read(decodeAddress(alice.address), messageToClaim);
+    const mailbox = await api.mailbox.readById(decodeAddress(alice.address), messageToClaim);
     expect(mailbox).toHaveProperty([0, 'toHuman']);
     expect(mailbox.toHuman()).toHaveLength(2);
     expect(mailbox).toHaveProperty([0, 'id']);

@@ -54,7 +54,7 @@ describe('GearWaitlist', () => {
   });
 
   test("read program's waitlist with messageId", async () => {
-    const waitlist = await api.waitlist.read(programId, messageId);
+    const waitlist = await api.waitlist.readById(programId, messageId);
     expect(waitlist).toHaveLength(2);
     expect(waitlist[0]).toHaveProperty('kind');
     expect(waitlist[0]).toHaveProperty('message');
@@ -76,7 +76,7 @@ describe('GearWaitlist', () => {
   });
 
   test("read program's waitlist with incorrect messageId", async () => {
-    const waitlist = await api.waitlist.read(programId, CreateType.create('[u8;32]', 0).toHex());
+    const waitlist = await api.waitlist.readById(programId, CreateType.create('[u8;32]', 0).toHex());
     expect(waitlist).toBeNull();
   });
 });

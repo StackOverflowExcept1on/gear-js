@@ -12,35 +12,30 @@ import {
   IProgramCreateResult,
   IProgramUploadOptions,
   IProgramUploadResult,
-  MailboxItem,
   OldMetadata,
   PayloadType,
   ReadStateArgs,
   Value,
-  WaitlistItem,
 } from '../types';
 import { GearApi } from '../GearApi';
 import { GearBlock } from '../Blocks';
 import { GearGas } from '../Gas';
-import { GearMailbox } from '../Mailbox';
 import { GearMessage } from '../Message';
 import { GearProgram } from '../Program';
 import { GearProgramState } from '../State';
-import { GearWaitlist } from '../Waitlist';
 import { ProgramMetadata } from '../metadata';
 
 export module Gear {
   export declare class Api extends GearApi {
     program: Program;
     message: Message;
-    mailbox: Mailbox;
     programState: ProgramState;
-    waitlist: Waitlist;
-    gas: Gas;
-    block: Block;
+    blocks: Block;
   }
 
   export declare class Program extends GearProgram {
+    calculateGas: Gas;
+
     /**
      * ### Upload program with code using program metadata to encode payload
      * @param args Program parameters
@@ -230,38 +225,6 @@ export module Gear {
     ): SubmittableExtrinsic<'promise', ISubmittableResult>;
   }
 
-  export declare class Mailbox extends GearMailbox {
-    /**
-     * ## Read mailbox connected with account
-     * @param accountId
-     * @param numberOfMessages _(default 1000)_ number of messages that will be read from mailbox
-     * ```javascript
-     * const alice = '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d'
-     * const api = await GearApi.create();
-     * const mailbox = await api.mailbox.read(alice);
-     * console.log(mailbox.map(item => item.toHuman()));
-     * ```
-     */
-    read(accountId: HexString, numberOfMessages?: number): Promise<MailboxItem[]>;
-
-    /**
-     * ## Get particular message from mailbox
-     * @param accountId
-     * @param messageId
-     * ```javascript
-     * const api = await GearApi.create();
-     *
-     * const alice = '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d'
-     * const messageId = '0xe9f3b99f23203d0c032868d3bd0349c8e243119626a8af98a2f4ac5ea6c78947'
-     * const mailbox = await api.mailbox.read(alice, messageId);
-     * if (mailbox !== null) {
-     *   console.log(mailbox.toHuman());
-     * }
-     * ```
-     */
-    read(accountId: HexString, messageId: HexString): Promise<MailboxItem>;
-  }
-
   export declare class ProgramState extends GearProgramState {
     /**
      * Read state of particular program
@@ -278,36 +241,6 @@ export module Gear {
      * @param type (optional) Index of type to decode state. metadata.types.state is uesd by default
      */
     read(args: ReadStateArgs, meta: ProgramMetadata, type?: number): Promise<Codec>;
-  }
-
-  export declare class Waitlist extends GearWaitlist {
-    /**
-     * ## _Read program's waitlist_
-     * @param programId
-     * @param numberOfMessages _(default 1000)_ number of messages that will be read from program's waitlist
-     * @example
-     * ```javascript
-     * const api = await GearApi.create();
-     * const waitlist = await api.waitlist.read('0xe0c6997d0bd83269ec108474494e2bd6ed156b30de599b9f2c91e82bb6ad04e8');
-     * console.log(waitlist.map(item => item.toHuman()));
-     * ```
-     */
-    read(programId: HexString, numberOfMessages?: number): Promise<WaitlistItem[]>;
-
-    /**
-     * ## _Get particular message from program's waitlist_
-     * @param programId
-     * @param messageId
-     * @example
-     * ```javascript
-     * const api = await GearApi.create();
-     * const programId = '0xe0c6997d0bd83269ec108474494e2bd6ed156b30de599b9f2c91e82bb6ad04e8'
-     * const messageId = '0xe9f3b99f23203d0c032868d3bd0349c8e243119626a8af98a2f4ac5ea6c78947'
-     * const waitlist = await api.waitlist.read(programId, messageId);
-     * console.log(waitlist.toHuman());
-     * ```
-     */
-    read(programId: HexString, messageId: HexString): Promise<WaitlistItem>;
   }
 
   export declare class Gas extends GearGas {

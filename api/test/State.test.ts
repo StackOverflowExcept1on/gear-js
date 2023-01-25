@@ -2,13 +2,13 @@ import { KeyringPair } from '@polkadot/keyring/types';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 
-import { GearApi, getWasmMetadata } from '../src';
+import { Gear, GearApi, getWasmMetadata } from '../src';
 import { Hex } from '../src/types';
 
 import { GEAR_EXAMPLES_WASM_DIR, TARGET } from './config';
 import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
 
-const api = new GearApi();
+const api: Gear.Api = new GearApi();
 let alice: KeyringPair;
 
 const demo_meta_test = {

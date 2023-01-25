@@ -3,11 +3,11 @@ import { KeyringPair } from '@polkadot/keyring/types';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 
-import { CreateType, GearApi, StateMetadata, getProgramMetadata, getStateMetadata } from '../src';
+import { CreateType, Gear, GearApi, StateMetadata, getProgramMetadata, getStateMetadata } from '../src';
 import { checkInit, getAccount, sleep } from './utilsFunctions';
 import { TARGET } from './config';
 
-const api = new GearApi();
+const api: Gear.Api = new GearApi();
 let alice: KeyringPair;
 
 const code = readFileSync(join(TARGET, 'test_meta.opt.wasm'));

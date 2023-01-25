@@ -9,6 +9,7 @@ import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions'
 import { TARGET } from './config';
 
 const api: Gear.Api = new GearApi();
+
 let alice: KeyringPair;
 let codeId: HexString;
 let programId: HexString;

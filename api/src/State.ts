@@ -123,7 +123,7 @@ export class GearProgramState extends GearStorage {
   read<S extends HexString | ReadStateArgs = HexString | ReadStateArgs>(
     programIdOrArgs: S,
     metaOrMetaWasm: S extends HexString ? Buffer : ProgramMetadata,
-    inputValueOrType: S extends HexString ? AnyJson : number,
+    inputValueOrType?: S extends HexString ? AnyJson : number,
   ): Promise<Codec> {
     if (typeof programIdOrArgs === 'object') {
       return this.newRead(programIdOrArgs, metaOrMetaWasm as ProgramMetadata, inputValueOrType as number);
