@@ -18,17 +18,17 @@ import { GearStorage } from './Storage';
 import { GearWaitlist } from './Waitlist';
 
 export class GearApi extends ApiPromise {
-  public program: GearProgram;
-  public programState: GearProgramState;
-  public message: GearMessage;
   public balance: GearBalance;
-  public gearEvents: GearEvents;
-  public defaultTypes: Record<string, unknown>;
   public blocks: GearBlock;
-  public storage: GearStorage;
-  public mailbox: GearMailbox;
   public claimValueFromMailbox: GearClaimValue;
   public code: GearCode;
+  public defaultTypes: Record<string, unknown>;
+  public gearEvents: GearEvents;
+  public mailbox: GearMailbox;
+  public message: GearMessage;
+  public program: GearProgram;
+  public programState: GearProgramState;
+  public storage: GearStorage;
   public waitlist: GearWaitlist;
 
   constructor(options: GearApiOptions = {}) {
@@ -45,7 +45,6 @@ export class GearApi extends ApiPromise {
       rpc: {
         ...gearRpc,
       },
-      // it's temporarily necessary to avoid the warning "API/INIT: Not decorating unknown runtime apis: GearApi/1"
       runtime: {
         GearApi: [
           {
@@ -57,20 +56,25 @@ export class GearApi extends ApiPromise {
       ...restOptions,
     });
 
-    this.isReady.then(() => {
-      this.program = new GearProgram(this);
-      this.message = new GearMessage(this);
-      this.balance = new GearBalance(this);
-      this.gearEvents = new GearEvents(this);
-      this.defaultTypes = defaultTypes;
-      this.programState = new GearProgramState(this);
-      this.blocks = new GearBlock(this);
-      this.storage = new GearStorage(this);
-      this.claimValueFromMailbox = new GearClaimValue(this);
-      this.mailbox = new GearMailbox(this);
-      this.code = new GearCode(this);
-      this.waitlist = new GearWaitlist(this);
-    });
+    this.defaultTypes = defaultTypes;
+
+    this.initialize();
+  }
+
+  protected async initialize() {
+    await this.isReady;
+
+    this.program = new GearProgram(this);
+    this.message = new GearMessage(this);
+    this.balance = new GearBalance(this);
+    this.gearEvents = new GearEvents(this);
+    this.programState = new GearProgramState(this);
+    this.blocks = new GearBlock(this);
+    this.storage = new GearStorage(this);
+    this.claimValueFromMailbox = new GearClaimValue(this);
+    this.mailbox = new GearMailbox(this);
+    this.code = new GearCode(this);
+    this.waitlist = new GearWaitlist(this);
   }
 
   static async create(options?: GearApiOptions): Promise<GearApi> {
@@ -121,4 +125,19 @@ export class GearApi extends ApiPromise {
     const { isModule, asModule } = error;
     return isModule ? this.registry.findMetaError(asModule) : null;
   }
+}
+
+export async function getSpec(address = 'ws://127.0.0.1:9944'): Promise<{ specName: string; specVersion: number }> {
+  const provider = new WsProvider(address);
+  provider.connect();
+  await provider.isReady;
+  return new Promise((resolve) =>
+    provider.on('connected', () => {
+      provider.send('state_getRuntimeVersion', []).then(({ specVersion, specName }) => {
+        provider.disconnect().then(() => {
+          resolve({ specVersion, specName });
+        });
+      });
+    }),
+  );
 }

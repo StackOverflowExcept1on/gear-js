@@ -1,15 +1,8 @@
 import { Gear, GearApi } from '../src';
+import { getSpec } from '../src/GearApi';
 import { sleep } from './utilsFunctions';
 
-const api: Gear.Api = new GearApi();
-
-beforeAll(async () => {
-  try {
-    await api.isReadyOrError;
-  } catch (error) {
-    process.exit(1);
-  }
-});
+let api: Gear.Api;
 
 afterAll(async () => {
   await api.disconnect();
@@ -17,6 +10,18 @@ afterAll(async () => {
 });
 
 describe('GearApi', () => {
+  test('get runtime spec', async () => {
+    const spec = await getSpec();
+    expect(spec).toHaveProperty('specName');
+    expect(spec.specName).toBeDefined();
+    expect(spec.specVersion).toBeDefined();
+  });
+
+  test('connect to api', async () => {
+    api = await GearApi.create();
+    expect(api.isConnected).toBeTruthy();
+  });
+
   test('chain', async () => {
     expect(await api.chain()).toBe('Development');
   });
