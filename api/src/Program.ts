@@ -4,15 +4,15 @@ import { HexString } from '@polkadot/util/types';
 import { randomAsHex } from '@polkadot/util-crypto';
 import { u8aToHex } from '@polkadot/util';
 
+import { GPROG, GPROG_HEX, generateCodeHash, generateProgramId, validateGasLimit, validateValue } from './utils';
 import { IProgramCreateOptions, IProgramCreateResult, IProgramUploadOptions, IProgramUploadResult } from './types';
-import { generateCodeHash, generateProgramId, GPROG, GPROG_HEX, validateGasLimit, validateValue } from './utils';
-import { isProgramMeta, ProgramMetadata } from './metadata';
-import { encodePayload } from './utils/create-payload';
-import { OldMetadata } from './types/interfaces';
-import { GearTransaction } from './Transaction';
-import { SubmitProgramError } from './errors';
+import { ProgramMetadata, isProgramMeta } from './metadata';
 import { GearApi } from './GearApi';
 import { GearGas } from './Gas';
+import { GearTransaction } from './Transaction';
+import { OldMetadata } from './types/interfaces';
+import { SubmitProgramError } from './errors';
+import { encodePayload } from './utils/create-payload';
 
 export class GearProgram extends GearTransaction {
   public calculateGas: GearGas;

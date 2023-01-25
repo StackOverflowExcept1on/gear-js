@@ -1,12 +1,12 @@
-import { KeyringPair } from '@polkadot/keyring/types';
 import { HexString } from '@polkadot/util/types';
+import { KeyringPair } from '@polkadot/keyring/types';
 import { blake2AsHex } from '@polkadot/util-crypto';
-import { readFileSync } from 'fs';
 import { join } from 'path';
+import { readFileSync } from 'fs';
 
-import { TARGET } from './config';
-import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { Gear, GearApi, getProgramMetadata } from '../src';
+import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
+import { TARGET } from './config';
 
 const api: Gear.Api = new GearApi();
 let alice: KeyringPair;

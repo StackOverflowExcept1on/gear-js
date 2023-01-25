@@ -1,18 +1,9 @@
 import { AnyJson, Codec, ISubmittableResult } from '@polkadot/types/types';
-import { SubmittableExtrinsic } from '@polkadot/api/types';
-import { SignedBlock } from '@polkadot/types/interfaces';
-import { HexString } from '@polkadot/util/types';
 import { Compact, u64 } from '@polkadot/types';
+import { HexString } from '@polkadot/util/types';
+import { SignedBlock } from '@polkadot/types/interfaces';
+import { SubmittableExtrinsic } from '@polkadot/api/types';
 
-import { ProgramMetadata } from '../metadata';
-import { GearProgramState } from '../State';
-import { GearWaitlist } from '../Waitlist';
-import { GearMessage } from '../Message';
-import { GearMailbox } from '../Mailbox';
-import { GearProgram } from '../Program';
-import { GearBlock } from '../Blocks';
-import { GearApi } from '../GearApi';
-import { GearGas } from '../Gas';
 import {
   GasInfo,
   IMessageSendOptions,
@@ -28,6 +19,15 @@ import {
   Value,
   WaitlistItem,
 } from '../types';
+import { GearApi } from '../GearApi';
+import { GearBlock } from '../Blocks';
+import { GearGas } from '../Gas';
+import { GearMailbox } from '../Mailbox';
+import { GearMessage } from '../Message';
+import { GearProgram } from '../Program';
+import { GearProgramState } from '../State';
+import { GearWaitlist } from '../Waitlist';
+import { ProgramMetadata } from '../metadata';
 
 export module Gear {
   export declare class Api extends GearApi {
