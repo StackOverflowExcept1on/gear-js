@@ -1,13 +1,13 @@
 import { Option, Raw } from '@polkadot/types';
 import { Codec } from '@polkadot/types/types';
 
-import { ActiveProgram, Hex, IGearPages, IProgram } from './types';
-import { GPAGES_HEX, GPROG_HEX, SEPARATOR } from './utils';
-import { ProgramExitedError, ProgramTerminatedError, ReadStorageError } from './errors';
-import { GearApi } from './GearApi';
+import { ActiveProgram, Hex, IGearPages, IProgram } from '../types';
+import { GPAGES_HEX, GPROG_HEX, SEPARATOR } from '../utils';
+import { ProgramExitedError, ProgramTerminatedError, ReadStorageError } from '../errors';
+import { GApi } from './api';
 
-export class GearStorage {
-  constructor(protected _api: GearApi) {}
+export class GStorage {
+  constructor(protected _api: GApi) {}
 
   /**
    * Get program from chain

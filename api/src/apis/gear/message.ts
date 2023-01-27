@@ -3,10 +3,10 @@ import { ISubmittableResult } from '@polkadot/types/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 
 import { IMessageSendOptions, IMessageSendReplyOptions, OldMetadata } from '../../types';
-import { GearMessage } from '../../Message';
+import { GMessage } from '../../base';
 import { ProgramMetadata } from '../../metadata';
 
-export declare class Message extends GearMessage {
+export declare class Message extends GMessage {
   /**
    * ## Send Message
    * @param args Message parameters

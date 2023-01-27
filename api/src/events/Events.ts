@@ -1,16 +1,12 @@
 import { UnsubscribePromise } from '@polkadot/api/types';
 
-import { Hex, IBalanceCallback, IBlocksCallback, ISystemAccountInfo } from '../types';
+import { Hex, IBalanceCallback, ISystemAccountInfo } from '../types';
 import { Transfer, UserMessageSent } from './GearEvents';
-import { GearApi } from '../GearApi';
+import { GApi } from '../base';
 import { IGearEvent } from './types';
 
 export class GearEvents {
-  private api: GearApi;
-
-  constructor(gearApi: GearApi) {
-    this.api = gearApi;
-  }
+  constructor(private api: GApi) {}
 
   subscribeToGearEvent<M extends keyof IGearEvent>(
     method: M,
@@ -51,15 +47,6 @@ export class GearEvents {
         .forEach(({ event }) => {
           callback(event as Transfer);
         });
-    });
-  }
-
-  /**
-   * @deprecated Use api.blocks.subscribeNewHeads instead
-   */
-  subscribeToNewBlocks(callback: IBlocksCallback): UnsubscribePromise {
-    return this.api.rpc.chain.subscribeNewHeads((header) => {
-      callback(header);
     });
   }
 

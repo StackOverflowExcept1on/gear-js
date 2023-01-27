@@ -1,11 +1,11 @@
 import { AnyJson, Codec } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
 
-import { GearProgramState } from '../../State';
+import { GProgramState } from '../../base';
 import { ProgramMetadata } from '../../metadata';
 import { ReadStateArgs } from '../../types';
 
-export declare class ProgramState extends GearProgramState {
+export declare class ProgramState extends GProgramState {
   /**
    * Read state of particular program
    * @param programId

@@ -3,14 +3,14 @@ import { Hash, RuntimeDispatchInfo } from '@polkadot/types/interfaces';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { isFunction } from '@polkadot/util';
 
-import { GearApi } from './GearApi';
-import { TransactionError } from './errors';
-import { TransactionStatusCb } from './types';
+import { GApi } from './api';
+import { TransactionError } from '../errors';
+import { TransactionStatusCb } from '../types';
 
-export class GearTransaction {
+export class GTransaction {
   extrinsic: SubmittableExtrinsic<'promise', ISubmittableResult>;
 
-  constructor(protected _api: GearApi) {}
+  constructor(protected _api: GApi) {}
 
   signAndSend(account: AddressOrPair, callback: TransactionStatusCb): Promise<() => void>;
 

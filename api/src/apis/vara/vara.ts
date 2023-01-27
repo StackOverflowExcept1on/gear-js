@@ -1,3 +1,5 @@
-import * as Gear from '../gear';
+import * as Gear from '../gear/index.js';
 
-export declare class Api extends Gear.Api {}
+declare class Api extends Gear.Api {}
+
+export default Api;

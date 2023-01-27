@@ -4,22 +4,22 @@ import { HexString } from '@polkadot/util/types';
 import { randomAsHex } from '@polkadot/util-crypto';
 import { u8aToHex } from '@polkadot/util';
 
-import { GPROG, GPROG_HEX, generateCodeHash, generateProgramId, validateGasLimit, validateValue } from './utils';
-import { IProgramCreateOptions, IProgramCreateResult, IProgramUploadOptions, IProgramUploadResult } from './types';
-import { ProgramMetadata, isProgramMeta } from './metadata';
-import { GearApi } from './GearApi';
-import { GearGas } from './Gas';
-import { GearTransaction } from './Transaction';
-import { OldMetadata } from './types/interfaces';
-import { SubmitProgramError } from './errors';
-import { encodePayload } from './utils/create-payload';
+import { GPROG, GPROG_HEX, generateCodeHash, generateProgramId, validateGasLimit, validateValue } from '../utils';
+import { IProgramCreateOptions, IProgramCreateResult, IProgramUploadOptions, IProgramUploadResult } from '../types';
+import { ProgramMetadata, isProgramMeta } from '../metadata';
+import { GApi } from './api';
+import { GGas } from './gas';
+import { GTransaction } from './transaction';
+import { OldMetadata } from '../types/interfaces';
+import { SubmitProgramError } from '../errors';
+import { encodePayload } from '../utils/create-payload';
 
-export class GearProgram extends GearTransaction {
-  public calculateGas: GearGas;
+export class GProgram extends GTransaction {
+  public calculateGas: GGas;
 
-  constructor(protected _api: GearApi) {
+  constructor(protected _api: GApi) {
     super(_api);
-    this.calculateGas = new GearGas(_api);
+    this.calculateGas = new GGas(_api);
   }
   /** ### Upload program with code
    * @param args

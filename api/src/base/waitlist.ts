@@ -1,11 +1,11 @@
 import { HexString } from '@polkadot/util/types';
 import { Option } from '@polkadot/types';
 
-import { Hex, WaitlistItem } from './types';
-import { GearApi } from './GearApi';
+import { Hex, WaitlistItem } from '../types';
+import { GApi } from './api';
 
-export class GearWaitlist {
-  constructor(private _api: GearApi) {}
+export class GWaitlist {
+  constructor(private _api: GApi) {}
 
   async readById(programId: HexString, messageId: HexString): Promise<WaitlistItem[]> {
     const waitlist = await this._api.query.gearMessenger.waitlist(programId, messageId);

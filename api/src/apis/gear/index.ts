@@ -1,3 +1,3 @@
-import { Api } from './gear';
+import Api from './gear';
 
 export { Api };

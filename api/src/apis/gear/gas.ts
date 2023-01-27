@@ -1,10 +1,10 @@
 import { HexString } from '@polkadot/util/types';
 
 import { GasInfo, OldMetadata, PayloadType, Value } from '../../types';
-import { GearGas } from '../../Gas';
+import { GGas } from '../../base';
 import { ProgramMetadata } from '../../metadata';
 
-export declare class Gas extends GearGas {
+export declare class Gas extends GGas {
   /**
    * ### Get gas spent of init message using upload_program extrinsic
    * @param sourceId Account Id

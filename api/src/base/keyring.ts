@@ -5,9 +5,9 @@ import { Keypair } from '@polkadot/util-crypto/types';
 import { Keyring } from '@polkadot/api';
 import { waitReady } from '@polkadot/wasm-crypto';
 
-import { decodeAddress } from './utils';
+import { decodeAddress } from '../utils';
 
-export class GearKeyring {
+export class GKeyring {
   private static unlock(keyring: KeyringPair, passphrase?: string) {
     if (keyring.isLocked) {
       keyring.unlock(passphrase);
@@ -24,13 +24,13 @@ export class GearKeyring {
 
   static fromKeyPair(pair: Keypair, name?: string): KeyringPair {
     const keyring = new Keyring({ type: 'sr25519' });
-    return GearKeyring.unlock(keyring.addFromPair(pair, { name }));
+    return GKeyring.unlock(keyring.addFromPair(pair, { name }));
   }
 
   static fromJson(keypairJson: KeyringPair$Json | string, passphrase?: string): KeyringPair {
     const json: KeyringPair$Json = isString(keypairJson) ? JSON.parse(keypairJson) : keypairJson;
     const keyring = new Keyring().addFromJson(json);
-    return GearKeyring.unlock(keyring, passphrase);
+    return GKeyring.unlock(keyring, passphrase);
   }
 
   static async fromSeed(seed: Uint8Array | string, name?: string): Promise<KeyringPair> {
@@ -42,7 +42,7 @@ export class GearKeyring {
   }
 
   static async fromMnemonic(mnemonic: string, name?: string): Promise<KeyringPair> {
-    return await GearKeyring.fromSuri(mnemonic, name);
+    return await GKeyring.fromSuri(mnemonic, name);
   }
 
   static toJson(keyring: KeyringPair, passphrase?: string): KeyringPair$Json {
@@ -60,7 +60,7 @@ export class GearKeyring {
   }> {
     const mnemonic = mnemonicGenerate();
     const seed = mnemonicToMiniSecret(mnemonic);
-    const keyring = await GearKeyring.fromSeed(seed, name);
+    const keyring = await GKeyring.fromSeed(seed, name);
     return {
       keyring,
       mnemonic: mnemonic,

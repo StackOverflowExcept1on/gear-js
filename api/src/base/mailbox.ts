@@ -2,14 +2,14 @@ import { AccountId32 } from '@polkadot/types/interfaces';
 import { HexString } from '@polkadot/util/types';
 import { Option } from '@polkadot/types';
 
-import { GearApi } from './GearApi';
-import { GearClaimValue } from './Claim';
-import { MailboxItem } from './types';
+import { GApi } from './api';
+import { GClaimValue } from './claim';
+import { MailboxItem } from '../types';
 
-export class GearMailbox {
-  public claimValue: GearClaimValue;
+export class GMailbox {
+  public claimValue: GClaimValue;
 
-  constructor(private api: GearApi) {
+  constructor(private api: GApi) {
     this.claimValue = api.claimValueFromMailbox;
   }
 

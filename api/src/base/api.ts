@@ -3,33 +3,33 @@ import { DispatchError, Event } from '@polkadot/types/interfaces';
 import { u128, u64 } from '@polkadot/types';
 import { RegistryError } from '@polkadot/types-codec/types';
 
-import { gearRpc, gearTypes } from './default';
-import { GearApiOptions } from './types';
-import { GearBalance } from './Balance';
-import { GearBlock } from './Blocks';
-import { GearClaimValue } from './Claim';
-import { GearCode } from './Code';
-import { GearEvents } from './events';
-import { GearMailbox } from './Mailbox';
-import { GearMessage } from './Message';
-import { GearProgram } from './Program';
-import { GearProgramState } from './State';
-import { GearStorage } from './Storage';
-import { GearWaitlist } from './Waitlist';
+import { gearRpc, gearTypes } from '../default';
+import { GBalance } from './balance';
+import { GBlock } from './blocks';
+import { GClaimValue } from './claim';
+import { GCode } from './code';
+import { GMailbox } from './mailbox';
+import { GMessage } from './message';
+import { GProgram } from './program';
+import { GProgramState } from './state';
+import { GStorage } from './storage';
+import { GWaitlist } from './waitlist';
+import { GearApiOptions } from '../types';
+import { GearEvents } from '../events';
 
-export class GearApi extends ApiPromise {
-  public balance: GearBalance;
-  public blocks: GearBlock;
-  public claimValueFromMailbox: GearClaimValue;
-  public code: GearCode;
+export class GApi extends ApiPromise {
+  public balance: GBalance;
+  public blocks: GBlock;
+  public claimValueFromMailbox: GClaimValue;
+  public code: GCode;
   public defaultTypes: Record<string, unknown>;
   public gearEvents: GearEvents;
-  public mailbox: GearMailbox;
-  public message: GearMessage;
-  public program: GearProgram;
-  public programState: GearProgramState;
-  public storage: GearStorage;
-  public waitlist: GearWaitlist;
+  public mailbox: GMailbox;
+  public message: GMessage;
+  public program: GProgram;
+  public programState: GProgramState;
+  public storage: GStorage;
+  public waitlist: GWaitlist;
 
   constructor(options: GearApiOptions = {}) {
     const { types, providerAddress, ...restOptions } = options;
@@ -64,21 +64,21 @@ export class GearApi extends ApiPromise {
   protected async initialize() {
     await this.isReady;
 
-    this.program = new GearProgram(this);
-    this.message = new GearMessage(this);
-    this.balance = new GearBalance(this);
+    this.program = new GProgram(this);
+    this.message = new GMessage(this);
+    this.balance = new GBalance(this);
     this.gearEvents = new GearEvents(this);
-    this.programState = new GearProgramState(this);
-    this.blocks = new GearBlock(this);
-    this.storage = new GearStorage(this);
-    this.claimValueFromMailbox = new GearClaimValue(this);
-    this.mailbox = new GearMailbox(this);
-    this.code = new GearCode(this);
-    this.waitlist = new GearWaitlist(this);
+    this.programState = new GProgramState(this);
+    this.blocks = new GBlock(this);
+    this.storage = new GStorage(this);
+    this.claimValueFromMailbox = new GClaimValue(this);
+    this.mailbox = new GMailbox(this);
+    this.code = new GCode(this);
+    this.waitlist = new GWaitlist(this);
   }
 
-  static async create(options?: GearApiOptions): Promise<GearApi> {
-    const api = new GearApi(options);
+  static async create(options?: GearApiOptions): Promise<GApi> {
+    const api = new GApi(options);
     await api.isReady;
     return api;
   }

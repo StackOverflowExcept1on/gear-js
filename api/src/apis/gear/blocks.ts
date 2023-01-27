@@ -2,9 +2,9 @@ import { Compact, u64 } from '@polkadot/types';
 import { HexString } from '@polkadot/util/types';
 import { SignedBlock } from '@polkadot/types/interfaces';
 
-import { GearBlock } from '../../Blocks';
+import { GBlock } from '../../base';
 
-export declare class Block extends GearBlock {
+export declare class Block extends GBlock {
   /**
    * Get data of particular block by blockHash
    * @param hash

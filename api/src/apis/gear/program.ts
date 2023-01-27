@@ -7,11 +7,11 @@ import {
   IProgramUploadResult,
   OldMetadata,
 } from '../../types';
+import { GProgram } from '../../base';
 import { Gas } from './gas';
-import { GearProgram } from '../../Program';
 import { ProgramMetadata } from '../../metadata';
 
-export declare class Program extends GearProgram {
+export declare class Program extends GProgram {
   calculateGas: Gas;
 
   /**

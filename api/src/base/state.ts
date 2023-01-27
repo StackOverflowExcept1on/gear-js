@@ -1,19 +1,19 @@
 import { AnyJson, Codec } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
 
-import { ProgramMetadata, StateMetadata } from './metadata';
-import { getWasmMetadata, readState } from './wasm';
-import { CreateType } from './create-type';
-import { GearStorage } from './Storage';
-import { OldMetadata } from './types';
-import { ReadStateError } from './errors';
+import { ProgramMetadata, StateMetadata } from '../metadata';
+import { getWasmMetadata, readState } from '../wasm';
+import { CreateType } from '../create-type';
+import { GStorage } from './storage';
+import { OldMetadata } from '../types';
+import { ReadStateError } from '../errors';
 
 interface ReadStateArgs {
   programId: HexString;
   at?: HexString;
 }
 
-export class GearProgramState extends GearStorage {
+export class GProgramState extends GStorage {
   private async newRead(
     args: { programId: HexString; at?: HexString },
     meta: ProgramMetadata,

@@ -2,11 +2,11 @@ import { Bytes, Option } from '@polkadot/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 
-import { CodeMetadata, CodeStorage, Hex } from './types';
-import { generateCodeHash, validateCodeId } from './utils';
-import { GearTransaction } from './Transaction';
+import { CodeMetadata, CodeStorage, Hex } from '../types';
+import { generateCodeHash, validateCodeId } from '../utils';
+import { GTransaction } from './transaction';
 
-export class GearCode extends GearTransaction {
+export class GCode extends GTransaction {
   /**
    * ### Submit code without initialization
    * @param code

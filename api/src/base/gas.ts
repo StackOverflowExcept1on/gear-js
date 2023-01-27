@@ -1,14 +1,13 @@
 import { isHex } from '@polkadot/util';
 
-import { Hex, PayloadType, Value } from './types';
-import { ProgramMetadata, isProgramMeta } from './metadata';
-import { GasInfo } from './types';
-import { GearApi } from './GearApi';
-import { OldMetadata } from './types/interfaces';
-import { encodePayload } from './utils/create-payload';
+import { GasInfo, Hex, PayloadType, Value } from '../types';
+import { ProgramMetadata, isProgramMeta } from '../metadata';
+import { GApi } from './api';
+import { OldMetadata } from '../types/interfaces';
+import { encodePayload } from '../utils/create-payload';
 
-export class GearGas {
-  constructor(private _api: GearApi) {}
+export class GGas {
+  constructor(private _api: GApi) {}
 
   async initUpload(
     sourceId: Hex,

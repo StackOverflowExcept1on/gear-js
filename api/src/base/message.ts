@@ -1,17 +1,17 @@
 import { SubmittableExtrinsic, VoidFn } from '@polkadot/api/types';
-import { ISubmittableResult } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
+import { ISubmittableResult } from '@polkadot/types/types';
 import { ReplaySubject } from 'rxjs';
 
-import { IMessageSendOptions, IMessageSendReplyOptions, OldMetadata } from './types';
-import { ProgramMetadata, isProgramMeta } from './metadata';
-import { SendMessageError, SendReplyError } from './errors';
-import { validateGasLimit, validateValue } from './utils';
-import { GearTransaction } from './Transaction';
-import { UserMessageSentData } from './events';
-import { encodePayload } from './utils/create-payload';
+import { IMessageSendOptions, IMessageSendReplyOptions, OldMetadata } from '../types';
+import { ProgramMetadata, isProgramMeta } from '../metadata';
+import { SendMessageError, SendReplyError } from '../errors';
+import { validateGasLimit, validateValue } from '../utils';
+import { GTransaction } from './transaction';
+import { UserMessageSentData } from '../events';
+import { encodePayload } from '../utils/create-payload';
 
-export class GearMessage extends GearTransaction {
+export class GMessage extends GTransaction {
   /**
    * ## Send Message
    * @param message
