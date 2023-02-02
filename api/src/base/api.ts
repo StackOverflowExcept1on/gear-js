@@ -18,18 +18,19 @@ import { GearApiOptions } from '../types';
 import { GearEvents } from '../events';
 
 export class GApi extends ApiPromise {
+  public program: GProgram;
+  public programState: GProgramState;
+  public programStorage: GStorage;
+  public message: GMessage;
   public balance: GBalance;
+  public gearEvents: GearEvents;
+  public mailbox: GMailbox;
   public blocks: GBlock;
   public claimValueFromMailbox: GClaimValue;
   public code: GCode;
   public defaultTypes: Record<string, unknown>;
-  public gearEvents: GearEvents;
-  public mailbox: GMailbox;
-  public message: GMessage;
-  public program: GProgram;
-  public programState: GProgramState;
-  public storage: GStorage;
   public waitlist: GWaitlist;
+  public provider: WsProvider;
 
   constructor(options: GearApiOptions = {}) {
     const { types, providerAddress, ...restOptions } = options;
@@ -55,6 +56,7 @@ export class GApi extends ApiPromise {
       },
       ...restOptions,
     });
+    this.provider = provider as WsProvider;
 
     this.defaultTypes = defaultTypes;
 
@@ -70,7 +72,7 @@ export class GApi extends ApiPromise {
     this.gearEvents = new GearEvents(this);
     this.programState = new GProgramState(this);
     this.blocks = new GBlock(this);
-    this.storage = new GStorage(this);
+    this.programStorage = new GStorage(this);
     this.claimValueFromMailbox = new GClaimValue(this);
     this.mailbox = new GMailbox(this);
     this.code = new GCode(this);

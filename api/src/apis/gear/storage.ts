@@ -1,4 +1,6 @@
-import { ActiveProgram, Hex, IGearPages } from '../../types';
+import { HexString } from '@polkadot/util/types';
+
+import { ActiveProgram, IGearPages } from '../../types';
 import Api from './gear';
 import { GStorage } from '../../base';
 
@@ -10,7 +12,7 @@ export declare class Storage extends GStorage {
    * @param programId
    * @returns
    */
-  gProg(programId: Hex): Promise<ActiveProgram>;
+  getProgram(programId: HexString): Promise<ActiveProgram>;
 
   /**
    * Get list of pages for program
@@ -18,5 +20,5 @@ export declare class Storage extends GStorage {
    * @param gProg
    * @returns
    */
-  gPages(programId: Hex, gProg: ActiveProgram): Promise<IGearPages>;
+  getProgramPages(programId: HexString, program: ActiveProgram): Promise<IGearPages>;
 }

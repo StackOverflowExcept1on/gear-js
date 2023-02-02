@@ -85,7 +85,7 @@ export class GProgramState extends GStorage {
     const codeHash = await this._api.program.codeHash(programId);
     let initialSize = await this._api.code.staticPages(codeHash);
 
-    const program = await this.gProg(programId);
+    const program = await this.getProgram(programId);
 
     program.allocations.forEach((value) => {
       if (value.gtn(initialSize - 1)) {
@@ -95,7 +95,7 @@ export class GProgramState extends GStorage {
 
     initialSize++;
 
-    const pages = await this.gPages(programId, program);
+    const pages = await this.getProgramPages(programId, program);
     const blockHash = await this._api.blocks.getFinalizedHead();
     const block = await this._api.blocks.get(blockHash);
 

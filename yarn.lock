@@ -2107,15 +2107,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/api@npm:0.28.2":
-  version: 0.28.2
-  resolution: "@gear-js/api@npm:0.28.2"
-  dependencies:
-    "@polkadot/api": 9.10.1
-    "@polkadot/util": 10.2.1
-    "@polkadot/wasm-crypto": 6.4.1
+"@gear-js/api@npm:0.28.8, @gear-js/api@npm:^0.28.8":
+  version: 0.28.8
+  resolution: "@gear-js/api@npm:0.28.8"
+  peerDependencies:
+    "@polkadot/api": ^9.11.1
+    "@polkadot/wasm-crypto": ^6.4.1
     rxjs: ^7.5.5
-  checksum: 6a2f581574f1157a47bc0546d5e7bdaa0f5d0ec2e6f69579634f0281aa9ddafeb0a1bb1c5f143663f63c34cd2c19cc5099a51be9610ff475ab0bc91815f3668c
+  checksum: 8c429fa971cf8cad29d1ef68798dffe4b1d32ed35d9b0975f403cbfc6df1f403fec5853b159f6bfaa38379602819c01d1dd6f5fef8555cda7834d6d65ad91478
   languageName: node
   linkType: hard
 
@@ -2152,7 +2151,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gear-js/api@npm:^0.28.2, @gear-js/api@npm:^0.28.5":
+"@gear-js/api@npm:^0.28.5":
   version: 0.28.5
   resolution: "@gear-js/api@npm:0.28.5"
   peerDependencies:
@@ -2160,17 +2159,6 @@ __metadata:
     "@polkadot/wasm-crypto": ^6.4.1
     rxjs: ^7.5.5
   checksum: 8559434e6fb3eebb5f523a915d15e1a8b8299f7238bb58b1541d43407c9f83b0f89ed6dc40718184a79388eab0b1f5803a8ba8d094555676f2afb1f2c8a46308
-  languageName: node
-  linkType: hard
-
-"@gear-js/api@npm:^0.28.7":
-  version: 0.28.7
-  resolution: "@gear-js/api@npm:0.28.7"
-  peerDependencies:
-    "@polkadot/api": ^9.11.1
-    "@polkadot/wasm-crypto": ^6.4.1
-    rxjs: ^7.5.5
-  checksum: 6465339eb9bc568aaa4566d7a0a56d877c7231e9f3c91f03a3ee03225c1ae6ba8787d1712ce74ec6598421674e0656cc79a21efe6f379878f9dd29a15b741294
   languageName: node
   linkType: hard
 
@@ -2239,7 +2227,7 @@ __metadata:
     "@babel/plugin-transform-modules-commonjs": 7.18.6
     "@babel/plugin-transform-typescript": 7.18.12
     "@babel/preset-typescript": 7.18.6
-    "@gear-js/api": 0.28.2
+    "@gear-js/api": 0.28.8
     "@gear-js/common": "workspace:^"
     "@nestjs/cli": 8.2.8
     "@nestjs/common": 8.4.7
@@ -2252,7 +2240,7 @@ __metadata:
     "@nestjs/schematics": 8.0.11
     "@nestjs/testing": 8.4.7
     "@nestjs/typeorm": 8.1.4
-    "@polkadot/api": 9.10.1
+    "@polkadot/api": 9.11.1
     "@types/amqplib": ^0.8.2
     "@types/cron": ^2.0.0
     "@types/express": 4.17.13
@@ -2341,8 +2329,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/frontend@workspace:idea/frontend"
   dependencies:
-    "@gear-js/api": ^0.28.7
-    "@gear-js/react-hooks": 0.5.2
+    "@gear-js/api": ^0.28.8
+    "@gear-js/react-hooks": 0.5.4
     "@gear-js/ui": "workspace:^"
     "@hcaptcha/react-hcaptcha": ^1.4.4
     "@mantine/form": ^5.4.0
@@ -2403,51 +2391,6 @@ __metadata:
     typescript: ^4.7.4
     web-vitals: ^2.1.4
     yup: ^0.32.11
-  languageName: unknown
-  linkType: soft
-
-"@gear-js/game-of-chance@workspace:apps/game-of-chance":
-  version: 0.0.0-use.local
-  resolution: "@gear-js/game-of-chance@workspace:apps/game-of-chance"
-  dependencies:
-    "@gear-js/api": ^0.27.0
-    "@gear-js/react-hooks": ^0.3.6
-    "@gear-js/ui": ^0.4.0
-    "@mantine/form": ^4.2.9
-    "@polkadot/api": 9.10.1
-    "@polkadot/extension-dapp": 0.44.6
-    "@polkadot/react-identicon": 2.9.14
-    "@polkadot/types": 9.10.1
-    "@polkadot/util": 10.2.1
-    "@polkadot/wasm-crypto": 6.4.1
-    "@testing-library/jest-dom": ^5.16.4
-    "@testing-library/react": ^13.3.0
-    "@testing-library/user-event": ^13.5.0
-    "@types/jest": ^27.5.2
-    "@types/node": ^16.11.41
-    "@types/react": ^18.0.12
-    "@types/react-dom": ^18.0.5
-    "@typescript-eslint/eslint-plugin": ^5.28.0
-    "@typescript-eslint/parser": ^5.28.0
-    buffer: ^6.0.3
-    clsx: ^1.1.1
-    eslint: ^8.17.0
-    eslint-config-airbnb: ^19.0.4
-    eslint-config-airbnb-typescript: ^17.0.0
-    eslint-config-prettier: ^8.5.0
-    eslint-plugin-import: ^2.26.0
-    eslint-plugin-jsx-a11y: ^6.5.1
-    eslint-plugin-react: ^7.30.0
-    eslint-plugin-react-hooks: ^4.6.0
-    react: ^18.2.0
-    react-app-rewired: ^2.2.1
-    react-dom: ^18.2.0
-    react-router-dom: ^6.3.0
-    react-scripts: ^5.0.1
-    react-transition-group: ^4.4.2
-    sass: ^1.54.0
-    typescript: ^4.7.3
-    web-vitals: ^2.1.4
   languageName: unknown
   linkType: soft
 
@@ -2542,16 +2485,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@gear-js/react-hooks@npm:0.5.2":
-  version: 0.5.2
-  resolution: "@gear-js/react-hooks@npm:0.5.2"
+"@gear-js/react-hooks@npm:0.5.4":
+  version: 0.5.4
+  resolution: "@gear-js/react-hooks@npm:0.5.4"
   peerDependencies:
-    "@gear-js/api": ^0.28.7
+    "@gear-js/api": ^0.28.8
     "@polkadot/extension-dapp": ^0.44.8
     react: ">=17.0.2"
     react-dom: ">=17.0.2"
     react-transition-group: ^4.4.2
-  checksum: f6e944237d5fad3cec26acc22389d300ba40f7acadb5abb337962ae6a0693f3a765bf33e3171fc9d2115a9cb140ce73f0b8eb17247fab146bbbc8da7faacf6d6
+  checksum: d98bb35e753971efaa90bbf49a67b4e4f3e1e52a3de3758643ef5e8419565a2b25ab7c25e74155fa50620bd1dea42acd923384a35c23ae98493a44cfd6eb5086
   languageName: node
   linkType: hard
 
@@ -2768,9 +2711,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@gear-js/test-balance@workspace:idea/test-balance"
   dependencies:
-    "@gear-js/api": ^0.28.2
+    "@gear-js/api": ^0.28.8
     "@gear-js/common": "workspace:^"
-    "@polkadot/api": 9.10.1
+    "@polkadot/api": 9.11.1
     "@types/amqplib": ^0.8.2
     "@types/express": 4.17.13
     "@typescript-eslint/eslint-plugin": 4.33.0
@@ -2932,8 +2875,8 @@ __metadata:
     "@babel/plugin-transform-typescript": 7.20.2
     "@babel/preset-env": 7.20.2
     "@babel/preset-typescript": 7.18.6
-    "@gear-js/api": 0.28.2
-    "@polkadot/api": 9.10.1
+    "@gear-js/api": 0.28.8
+    "@polkadot/api": 9.11.1
     "@types/chai": 4.3.4
     "@types/jest": 29.2.3
     "@types/js-yaml": 4.0.5
@@ -6782,7 +6725,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:^18.0.12, @types/react@npm:^18.0.14, @types/react@npm:^18.0.15, @types/react@npm:^18.0.21, @types/react@npm:^18.0.25, @types/react@npm:^18.0.9":
+"@types/react@npm:*, @types/react@npm:^18.0.14, @types/react@npm:^18.0.15, @types/react@npm:^18.0.21, @types/react@npm:^18.0.25, @types/react@npm:^18.0.9":
   version: 18.0.26
   resolution: "@types/react@npm:18.0.26"
   dependencies:
@@ -7040,7 +6983,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:^5.0.0, @typescript-eslint/eslint-plugin@npm:^5.25.0, @typescript-eslint/eslint-plugin@npm:^5.28.0, @typescript-eslint/eslint-plugin@npm:^5.30.0, @typescript-eslint/eslint-plugin@npm:^5.30.5, @typescript-eslint/eslint-plugin@npm:^5.30.6, @typescript-eslint/eslint-plugin@npm:^5.31.0, @typescript-eslint/eslint-plugin@npm:^5.32.0, @typescript-eslint/eslint-plugin@npm:^5.34.0, @typescript-eslint/eslint-plugin@npm:^5.42.1, @typescript-eslint/eslint-plugin@npm:^5.5.0":
+"@typescript-eslint/eslint-plugin@npm:^5.0.0, @typescript-eslint/eslint-plugin@npm:^5.25.0, @typescript-eslint/eslint-plugin@npm:^5.30.0, @typescript-eslint/eslint-plugin@npm:^5.30.5, @typescript-eslint/eslint-plugin@npm:^5.30.6, @typescript-eslint/eslint-plugin@npm:^5.31.0, @typescript-eslint/eslint-plugin@npm:^5.32.0, @typescript-eslint/eslint-plugin@npm:^5.34.0, @typescript-eslint/eslint-plugin@npm:^5.42.1, @typescript-eslint/eslint-plugin@npm:^5.5.0":
   version: 5.48.2
   resolution: "@typescript-eslint/eslint-plugin@npm:5.48.2"
   dependencies:
@@ -7124,7 +7067,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^5.0.0, @typescript-eslint/parser@npm:^5.25.0, @typescript-eslint/parser@npm:^5.28.0, @typescript-eslint/parser@npm:^5.30.0, @typescript-eslint/parser@npm:^5.30.5, @typescript-eslint/parser@npm:^5.30.6, @typescript-eslint/parser@npm:^5.31.0, @typescript-eslint/parser@npm:^5.32.0, @typescript-eslint/parser@npm:^5.34.0, @typescript-eslint/parser@npm:^5.42.1, @typescript-eslint/parser@npm:^5.5.0":
+"@typescript-eslint/parser@npm:^5.0.0, @typescript-eslint/parser@npm:^5.25.0, @typescript-eslint/parser@npm:^5.30.0, @typescript-eslint/parser@npm:^5.30.5, @typescript-eslint/parser@npm:^5.30.6, @typescript-eslint/parser@npm:^5.31.0, @typescript-eslint/parser@npm:^5.32.0, @typescript-eslint/parser@npm:^5.34.0, @typescript-eslint/parser@npm:^5.42.1, @typescript-eslint/parser@npm:^5.5.0":
   version: 5.48.2
   resolution: "@typescript-eslint/parser@npm:5.48.2"
   dependencies:
@@ -12064,7 +12007,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^8.16.0, eslint@npm:^8.17.0, eslint@npm:^8.18.0, eslint@npm:^8.19.0, eslint@npm:^8.21.0, eslint@npm:^8.22.0, eslint@npm:^8.27.0, eslint@npm:^8.3.0":
+"eslint@npm:^8.16.0, eslint@npm:^8.18.0, eslint@npm:^8.19.0, eslint@npm:^8.21.0, eslint@npm:^8.22.0, eslint@npm:^8.27.0, eslint@npm:^8.3.0":
   version: 8.32.0
   resolution: "eslint@npm:8.32.0"
   dependencies:
@@ -22847,7 +22790,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^4.3.5, typescript@npm:^4.6.4, typescript@npm:^4.7.3, typescript@npm:^4.7.4, typescript@npm:^4.8.4":
+"typescript@npm:^4.3.5, typescript@npm:^4.6.4, typescript@npm:^4.7.4, typescript@npm:^4.8.4":
   version: 4.9.4
   resolution: "typescript@npm:4.9.4"
   bin:
@@ -22887,7 +22830,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.3.5#~builtin<compat/typescript>, typescript@patch:typescript@^4.6.4#~builtin<compat/typescript>, typescript@patch:typescript@^4.7.3#~builtin<compat/typescript>, typescript@patch:typescript@^4.7.4#~builtin<compat/typescript>, typescript@patch:typescript@^4.8.4#~builtin<compat/typescript>":
+"typescript@patch:typescript@^4.3.5#~builtin<compat/typescript>, typescript@patch:typescript@^4.6.4#~builtin<compat/typescript>, typescript@patch:typescript@^4.7.4#~builtin<compat/typescript>, typescript@patch:typescript@^4.8.4#~builtin<compat/typescript>":
   version: 4.9.4
   resolution: "typescript@patch:typescript@npm%3A4.9.4#~builtin<compat/typescript>::version=4.9.4&hash=d73830"
   bin:

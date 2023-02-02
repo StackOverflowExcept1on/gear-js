@@ -1,8 +1,8 @@
 import { HexString } from '@polkadot/util/types';
 import { Option } from '@polkadot/types';
 
-import { Hex, WaitlistItem } from '../types';
 import { GApi } from './api';
+import { WaitlistItem } from '../types';
 
 export class GWaitlist {
   constructor(private _api: GApi) {}
@@ -16,7 +16,7 @@ export class GWaitlist {
     return typedWaitlist.unwrapOr(null);
   }
 
-  async read(programId: Hex, numberOfMessages = 1000): Promise<WaitlistItem[]> {
+  async read(programId: HexString, numberOfMessages = 1000): Promise<WaitlistItem[]> {
     const keyPrefix = this._api.query.gearMessenger.waitlist.keyPrefix(programId);
     const keysPaged = await this._api.rpc.state.getKeysPaged(keyPrefix, numberOfMessages, keyPrefix);
     if (keysPaged.length === 0) {

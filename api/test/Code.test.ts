@@ -1,14 +1,15 @@
+import { HexString } from '@polkadot/util/types';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 
-import { Gear, GearApi, Hex } from '../src';
+import { GApi, Gear } from '../src';
 import { getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { GEAR_EXAMPLES_WASM_DIR } from './config';
 
-const api: Gear.Api = new GearApi();
+const api: Gear.Api = new GApi();
 const accounts = {};
 const code = readFileSync(join(GEAR_EXAMPLES_WASM_DIR, 'demo_sum.opt.wasm'));
-let codeId: Hex;
+let codeId: HexString;
 
 beforeAll(async () => {
   await api.isReadyOrError;

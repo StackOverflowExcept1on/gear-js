@@ -1,7 +1,8 @@
 import { BN, u8aToBigInt } from '@polkadot/util';
 import { u128, u64 } from '@polkadot/types';
+import { HexString } from '@polkadot/util/types';
 
-import { GasLimit, Hex, Value } from '../types';
+import { GasLimit, Value } from '../types';
 import { GApi } from '../base';
 import { ValidationError } from '../errors';
 
@@ -35,7 +36,7 @@ export function validateGasLimit(gas: GasLimit, api: GApi) {
   }
 }
 
-export async function validateCodeId(codeId: Hex, api: GApi) {
+export async function validateCodeId(codeId: HexString, api: GApi) {
   if (await api.code.exists(codeId)) {
     throw new ValidationError('Code already exists');
   }

@@ -1,9 +1,10 @@
+import { HexString } from '@polkadot/util/types';
 import { UnsubscribePromise } from '@polkadot/api/types';
 
-import { Hex, IBalanceCallback } from '../../../types';
 import { Transfer, UserMessageSent } from './types';
 import Api from '../gear';
 import { GearEvents } from '../../../events';
+import { IBalanceCallback } from '../../../types';
 import { IGearEvent } from './types';
 
 export declare class Events extends GearEvents {
@@ -15,7 +16,7 @@ export declare class Events extends GearEvents {
   ): UnsubscribePromise;
 
   subscribeToUserMessageSentByActor(
-    options: { from?: Hex; to?: Hex },
+    options: { from?: HexString; to?: HexString },
     callback: (event: UserMessageSent) => void,
   ): UnsubscribePromise;
 

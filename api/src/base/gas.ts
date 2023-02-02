@@ -1,6 +1,7 @@
+import { HexString } from '@polkadot/util/types';
 import { isHex } from '@polkadot/util';
 
-import { GasInfo, Hex, PayloadType, Value } from '../types';
+import { GasInfo, PayloadType, Value } from '../types';
 import { ProgramMetadata, isProgramMeta } from '../metadata';
 import { GApi } from './api';
 import { OldMetadata } from '../types/interfaces';
@@ -10,8 +11,8 @@ export class GGas {
   constructor(private _api: GApi) {}
 
   async initUpload(
-    sourceId: Hex,
-    code: Hex | Buffer,
+    sourceId: HexString,
+    code: HexString | Buffer,
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
@@ -29,8 +30,8 @@ export class GGas {
   }
 
   async initCreate(
-    sourceId: Hex,
-    codeId: Hex,
+    sourceId: HexString,
+    codeId: HexString,
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
@@ -48,8 +49,8 @@ export class GGas {
   }
 
   async handle(
-    sourceId: Hex,
-    destinationId: Hex,
+    sourceId: HexString,
+    destinationId: HexString,
     payload: PayloadType,
     value?: Value,
     allowOtherPanics?: boolean,
@@ -67,8 +68,8 @@ export class GGas {
   }
 
   async reply(
-    sourceId: Hex,
-    messageId: Hex,
+    sourceId: HexString,
+    messageId: HexString,
     exitCode: number,
     payload: PayloadType,
     value?: Value,
