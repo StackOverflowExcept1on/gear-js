@@ -2,7 +2,7 @@ import { HexString } from '@polkadot/util/types';
 import { isHex } from '@polkadot/util';
 
 import { GasInfo, PayloadType, Value } from '../types';
-import { ProgramMetadata, isProgramMeta } from '../metadata';
+import { ProgramMetadata, isProgramMeta } from '../common';
 import { GApi } from './api';
 import { OldMetadata } from '../types/interfaces';
 import { encodePayload } from '../utils/create-payload';

@@ -1,4 +1,4 @@
-import { OldMetadata } from '../types';
+import { OldMetadata } from '../../types';
 import importObj from './importObj';
 import { readMetaValue } from './utils';
 

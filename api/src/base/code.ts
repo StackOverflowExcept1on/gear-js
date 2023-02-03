@@ -8,7 +8,7 @@ import { CodeMetadata, CodeStorage } from '../types';
 import { generateCodeHash, getIdsFromKeys, validateCodeId } from '../utils';
 import { CodeDoesNotExistError } from '../errors';
 import { GTransaction } from './transaction';
-import { getGrReply } from '../wasm';
+import { getGrReply } from '../common';
 
 export class GCode extends GTransaction {
   /**

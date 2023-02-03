@@ -5,7 +5,7 @@ import { HexString } from '@polkadot/util/types';
 import assert from 'assert';
 import { hexToU8a } from '@polkadot/util';
 
-import { TypeStructure } from '../types';
+import { TypeStructure } from '../../types';
 
 export class GearMetadata {
   private registry: Registry;

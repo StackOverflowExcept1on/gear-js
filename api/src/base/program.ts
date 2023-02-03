@@ -6,7 +6,7 @@ import { randomAsHex } from '@polkadot/util-crypto';
 import { IProgram, OldMetadata, ProgramMap } from '../types/interfaces';
 import { IProgramCreateOptions, IProgramCreateResult, IProgramUploadOptions, IProgramUploadResult } from '../types';
 import { ProgramDoesNotExistError, ProgramExitedError, ProgramTerminatedError, SubmitProgramError } from '../errors';
-import { ProgramMetadata, isProgramMeta } from '../metadata';
+import { ProgramMetadata, isProgramMeta } from '../common';
 import { generateCodeHash, generateProgramId, getIdsFromKeys, validateGasLimit, validateValue } from '../utils';
 import { GApi } from './api';
 import { GGas } from './gas';

@@ -1,4 +1,4 @@
-import { OldMetadata } from '../types';
+import { OldMetadata } from '../../types';
 import { ProgramMetadata } from './programMetadata';
 import { StateMetadata } from './stateMetadata';
 

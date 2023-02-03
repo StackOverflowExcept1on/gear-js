@@ -3,9 +3,9 @@ import { hexToU8a, isHex } from '@polkadot/util';
 import { Codec } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
 
-import { isJSON, toJSON } from '../utils/json';
-import { REGULAR_EXP } from '../utils/regexp';
-import { joinTypePath } from '../utils/types';
+import { isJSON, toJSON } from '../../utils/json';
+import { REGULAR_EXP } from '../../utils/regexp';
+import { joinTypePath } from '../../utils/types';
 
 function getName(path: string[], name: string, slice = -1) {
   if (name.endsWith(joinTypePath(path.slice(slice)))) {

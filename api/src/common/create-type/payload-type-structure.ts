@@ -1,8 +1,8 @@
 import { AnyJson } from '@polkadot/types/types';
 
 import { TypeTree, enumTypes } from './interfaces';
-import { isJSON, splitByCommas, toJSON } from '../utils';
-import { REGULAR_EXP } from '../utils/regexp';
+import { isJSON, splitByCommas, toJSON } from '../../utils';
+import { REGULAR_EXP } from '../../utils/regexp';
 import generate from './generate';
 
 function getIfTuple(typeName: string, types: AnyJson, raw: boolean): TypeTree | TypeTree[] | null {

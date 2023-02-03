@@ -6,7 +6,7 @@ import { ActiveProgram, IGearPages, ProgramMap } from '../types';
 import { ProgramDoesNotExistError, ProgramExitedError, ProgramTerminatedError } from '../errors';
 import { GApi } from './api';
 
-export class GStorage {
+export class GProgramStorage {
   constructor(protected _api: GApi) {}
 
   /**

@@ -11,5 +11,6 @@ export { GMailbox } from './mailbox';
 export { GMessage } from './message';
 export { GProgram } from './program';
 export { GProgramState } from './state';
-export { GStorage } from './storage';
+export { GProgramStorage } from './storage';
 export { GWaitlist } from './waitlist';
+export * from './events';

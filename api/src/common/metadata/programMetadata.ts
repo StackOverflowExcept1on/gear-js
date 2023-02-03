@@ -1,6 +1,6 @@
 import { HexString } from '@polkadot/util/types';
 
-import { HumanProgramMetadataRepr, ProgramMetadataRepr } from '../types';
+import { HumanProgramMetadataRepr, ProgramMetadataRepr } from '../../types';
 import { CreateType } from '../create-type';
 import { GearMetadata } from './metadata';
 

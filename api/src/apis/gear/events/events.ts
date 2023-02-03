@@ -3,11 +3,11 @@ import { UnsubscribePromise } from '@polkadot/api/types';
 
 import { Transfer, UserMessageSent } from './types';
 import Api from '../api';
-import { GearEvents } from '../../../events';
+import { GEvents } from '../../../base/events';
 import { IBalanceCallback } from '../../../types';
 import { IGearEvent } from './types';
 
-export declare class Events extends GearEvents {
+export declare class Events extends GEvents {
   constructor(api: Api);
 
   subscribeToGearEvent<M extends keyof IGearEvent>(

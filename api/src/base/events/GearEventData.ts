@@ -14,8 +14,8 @@ import {
   ProgramId,
   UserMessageReadReason,
   UserMessageSentMessage,
-} from '../types';
-import { ProgramDetails, QueuedDispatch } from '../types';
+} from '../../types';
+import { ProgramDetails, QueuedDispatch } from '../../types';
 
 export class GearEventData extends GenericEventData {
   constructor(data: GenericEventData) {

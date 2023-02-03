@@ -3,33 +3,33 @@ import { DispatchError, Event } from '@polkadot/types/interfaces';
 import { u128, u64 } from '@polkadot/types';
 import { RegistryError } from '@polkadot/types-codec/types';
 
-import { gearRpc, gearTypes } from '../default';
+import { gearRpc, gearTypes } from '../common';
 import { GBalance } from './balance';
 import { GBlock } from './blocks';
 import { GClaimValue } from './claim';
 import { GCode } from './code';
+import { GEvents } from './events';
 import { GMailbox } from './mailbox';
 import { GMessage } from './message';
 import { GProgram } from './program';
 import { GProgramState } from './state';
-import { GStorage } from './storage';
+import { GProgramStorage } from './storage';
 import { GWaitlist } from './waitlist';
 import { GearApiOptions } from '../types';
-import { GearEvents } from '../events';
 
 export class GApi extends ApiPromise {
   public program: GProgram;
   public programState: GProgramState;
-  public programStorage: GStorage;
+  public programStorage: GProgramStorage;
   public message: GMessage;
   public balance: GBalance;
-  public gearEvents: GearEvents;
+  public gearEvents: GEvents;
   public mailbox: GMailbox;
-  public blocks: GBlock;
   public claimValueFromMailbox: GClaimValue;
   public code: GCode;
-  public defaultTypes: Record<string, unknown>;
   public waitlist: GWaitlist;
+  public blocks: GBlock;
+  public defaultTypes: Record<string, unknown>;
   public provider: WsProvider;
 
   constructor(options: GearApiOptions = {}) {
@@ -68,10 +68,10 @@ export class GApi extends ApiPromise {
     this.program = new GProgram(this);
     this.message = new GMessage(this);
     this.balance = new GBalance(this);
-    this.gearEvents = new GearEvents(this);
+    this.gearEvents = new GEvents(this);
     this.programState = new GProgramState(this);
     this.blocks = new GBlock(this);
-    this.programStorage = new GStorage(this);
+    this.programStorage = new GProgramStorage(this);
     this.claimValueFromMailbox = new GClaimValue(this);
     this.mailbox = new GMailbox(this);
     this.code = new GCode(this);

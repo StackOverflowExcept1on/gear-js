@@ -2,7 +2,7 @@ import { HexString } from '@polkadot/util/types';
 
 import { GasInfo, OldMetadata, PayloadType, Value } from '../../types';
 import { GGas } from '../../base';
-import { ProgramMetadata } from '../../metadata';
+import { ProgramMetadata } from '../../common/metadata';
 
 export declare class Gas extends GGas {
   /**

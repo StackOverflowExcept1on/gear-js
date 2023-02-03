@@ -2,7 +2,7 @@ import { BlockNumber } from '@polkadot/types/interfaces';
 import { u64 } from '@polkadot/types';
 
 import { PAGE_SIZE, getExportValue } from './utils';
-import { IGearPages } from '../types';
+import { IGearPages } from '../../types';
 import importObj from './importObj';
 
 export async function readState(

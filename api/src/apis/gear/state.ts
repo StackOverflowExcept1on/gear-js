@@ -2,7 +2,7 @@ import { AnyJson, Codec } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
 
 import { GProgramState } from '../../base';
-import { ProgramMetadata } from '../../metadata';
+import { ProgramMetadata } from '../../common/metadata';
 import { ReadStateArgs } from '../../types/interfaces';
 
 export declare class ProgramState extends GProgramState {
