@@ -1,7 +1,7 @@
 import { HexString } from '@polkadot/util/types';
 
 import { ActiveProgram, IGearPages } from '../../types';
-import Api from './gear';
+import Api from './api';
 import { GStorage } from '../../base';
 
 export declare class Storage extends GStorage {

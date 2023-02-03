@@ -39,7 +39,6 @@ export class GApi extends ApiPromise {
 
     super({
       provider,
-      derives: {},
       types: {
         ...defaultTypes,
       },

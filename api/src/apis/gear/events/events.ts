@@ -2,7 +2,7 @@ import { HexString } from '@polkadot/util/types';
 import { UnsubscribePromise } from '@polkadot/api/types';
 
 import { Transfer, UserMessageSent } from './types';
-import Api from '../gear';
+import Api from '../api';
 import { GearEvents } from '../../../events';
 import { IBalanceCallback } from '../../../types';
 import { IGearEvent } from './types';

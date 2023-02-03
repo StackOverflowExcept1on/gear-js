@@ -1,3 +1,3 @@
-import Api from './vara';
+import Api from './api';
 
 export { Api };

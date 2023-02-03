@@ -1,15 +1,12 @@
 import { AccountId32 } from '@polkadot/types/interfaces';
 import { HexString } from '@polkadot/util/types';
 
-import Api from './gear';
 import { ClaimValue } from './claim';
 import { GMailbox } from '../../base';
 import { MailboxItem } from '../../types';
 
 export declare class Mailbox extends GMailbox {
   public claimValue: ClaimValue;
-
-  constructor(api: Api);
 
   /**
    * ## Get particular message from mailbox
