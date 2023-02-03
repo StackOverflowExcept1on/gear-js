@@ -4,12 +4,10 @@ import { ISubmittableResult } from '@polkadot/types/types';
 import { ReplaySubject } from 'rxjs';
 
 import { IMessageSendOptions, IMessageSendReplyOptions, OldMetadata } from '../types';
-import { ProgramMetadata, isProgramMeta } from '../common';
-import { SendMessageError, SendReplyError } from '../errors';
-import { validateGasLimit, validateValue } from '../utils';
+import { ProgramMetadata, SendMessageError, SendReplyError, isProgramMeta } from '../common';
+import { encodePayload, validateGasLimit, validateValue } from '../utils';
 import { GTransaction } from './transaction';
 import { UserMessageSentData } from './events';
-import { encodePayload } from '../utils/create-payload';
 
 export class GMessage extends GTransaction {
   /**

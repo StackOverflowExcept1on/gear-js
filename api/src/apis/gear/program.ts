@@ -9,7 +9,7 @@ import {
 } from '../../types';
 import { GProgram } from '../../base';
 import { Gas } from './gas';
-import { ProgramMetadata } from '../../common/metadata';
+import { ProgramMetadata } from '../../common';
 
 export declare class Program extends GProgram {
   calculateGas: Gas;

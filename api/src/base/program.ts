@@ -5,13 +5,25 @@ import { randomAsHex } from '@polkadot/util-crypto';
 
 import { IProgram, OldMetadata, ProgramMap } from '../types/interfaces';
 import { IProgramCreateOptions, IProgramCreateResult, IProgramUploadOptions, IProgramUploadResult } from '../types';
-import { ProgramDoesNotExistError, ProgramExitedError, ProgramTerminatedError, SubmitProgramError } from '../errors';
-import { ProgramMetadata, isProgramMeta } from '../common';
-import { generateCodeHash, generateProgramId, getIdsFromKeys, validateGasLimit, validateValue } from '../utils';
+import {
+  ProgramDoesNotExistError,
+  ProgramExitedError,
+  ProgramMetadata,
+  ProgramTerminatedError,
+  SubmitProgramError,
+  isProgramMeta,
+} from '../common';
+import {
+  encodePayload,
+  generateCodeHash,
+  generateProgramId,
+  getIdsFromKeys,
+  validateGasLimit,
+  validateValue,
+} from '../utils';
 import { GApi } from './api';
 import { GGas } from './gas';
 import { GTransaction } from './transaction';
-import { encodePayload } from '../utils/create-payload';
 
 export class GProgram extends GTransaction {
   public calculateGas: GGas;

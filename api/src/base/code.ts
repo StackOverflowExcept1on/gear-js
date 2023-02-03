@@ -4,11 +4,10 @@ import { ISubmittableResult } from '@polkadot/types/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { u8aToHex } from '@polkadot/util';
 
+import { CodeDoesNotExistError, getGrReply } from '../common';
 import { CodeMetadata, CodeStorage } from '../types';
 import { generateCodeHash, getIdsFromKeys, validateCodeId } from '../utils';
-import { CodeDoesNotExistError } from '../errors';
 import { GTransaction } from './transaction';
-import { getGrReply } from '../common';
 
 export class GCode extends GTransaction {
   /**

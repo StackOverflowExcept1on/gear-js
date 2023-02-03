@@ -3,7 +3,7 @@ import { Option } from '@polkadot/types';
 import { u8aToU8a } from '@polkadot/util';
 
 import { ActiveProgram, IGearPages, ProgramMap } from '../types';
-import { ProgramDoesNotExistError, ProgramExitedError, ProgramTerminatedError } from '../errors';
+import { ProgramDoesNotExistError, ProgramExitedError, ProgramTerminatedError } from '../common';
 import { GApi } from './api';
 
 export class GProgramStorage {

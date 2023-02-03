@@ -4,7 +4,7 @@ import { ISubmittableResult } from '@polkadot/types/types';
 import { isFunction } from '@polkadot/util';
 
 import { GApi } from './api';
-import { TransactionError } from '../errors';
+import { TransactionError } from '../common';
 import { TransactionStatusCb } from '../types';
 
 export class GTransaction {

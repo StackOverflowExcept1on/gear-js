@@ -1,10 +1,9 @@
 import { AnyJson, Codec } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
 
-import { CreateType, ProgramMetadata, StateMetadata, getWasmMetadata, readState } from '../common';
+import { CreateType, ProgramMetadata, ReadStateError, StateMetadata, getWasmMetadata, readState } from '../common';
 import { GProgramStorage } from './storage';
 import { OldMetadata } from '../types';
-import { ReadStateError } from '../errors';
 
 interface ReadStateArgs {
   programId: HexString;

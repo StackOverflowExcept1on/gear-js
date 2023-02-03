@@ -1,11 +1,9 @@
 import '@polkadot/api-augment';
 export * from './base';
-export * from './common/wasm';
-export * from './common/create-type';
+export * from './common';
 export * from './types/interfaces';
 export * from './base/events';
 export * from './utils';
 export * from './base/events';
 export * from './types';
-export * from './common/metadata';
 export * from './apis';

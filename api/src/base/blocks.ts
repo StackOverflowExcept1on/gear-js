@@ -8,9 +8,8 @@ import { HexString } from '@polkadot/util/types';
 import { Observable } from 'rxjs';
 import { PromiseResult } from '@polkadot/api/types';
 
-import { CreateType } from '../common';
+import { CreateType, GetBlockError } from '../common';
 import { GApi } from './api';
-import { GetBlockError } from '../errors';
 
 export class GBlock {
   subscribeNewHeads: PromiseResult<() => Observable<HeaderExtended>>;

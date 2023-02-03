@@ -4,7 +4,7 @@ import { SubmittableExtrinsic } from '@polkadot/api/types';
 
 import { IMessageSendOptions, IMessageSendReplyOptions, OldMetadata } from '../../types';
 import { GMessage } from '../../base';
-import { ProgramMetadata } from '../../common/metadata';
+import { ProgramMetadata } from '../../common';
 
 export declare class Message extends GMessage {
   /**
