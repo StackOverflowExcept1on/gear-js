@@ -55,6 +55,7 @@ export class GApi extends ApiPromise {
       },
       ...restOptions,
     });
+
     this.provider = provider as WsProvider;
 
     this.defaultTypes = defaultTypes;

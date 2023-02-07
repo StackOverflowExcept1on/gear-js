@@ -17,6 +17,28 @@ export class GBlock {
   constructor(private api: GApi) {
     this.subscribeNewHeads = api.derive.chain.subscribeNewHeads;
   }
+
+  /**
+   * Get data of particular block by blockHash
+   * @param hash
+   * @returns
+   */
+  get(hash: HexString | Uint8Array): Promise<SignedBlock>;
+
+  /**
+   * Get data of particular block by blockNumber
+   * @param number
+   * @returns
+   */
+  get(number: number): Promise<SignedBlock>;
+
+  /**
+   * Get data of particular block by blockNumber or blockHash
+   * @param hashOrNumber
+   * @returns
+   */
+  get(hashOrNumber: HexString | Uint8Array | number): Promise<SignedBlock>;
+
   /**
    * Get data of particular block by blockNumber or blockHash
    * @param hashOrNumber
@@ -49,6 +71,24 @@ export class GBlock {
     const block = await this.get(hash);
     return block.block.header.number;
   }
+
+  /**
+   * ### Get block's timestamp
+   * @param block
+   */
+  getBlockTimestamp(block: SignedBlock): Promise<Compact<u64>>;
+
+  /**
+   * ### Get block's timestamp by blockHash
+   * @param hash
+   */
+  getBlockTimestamp(hash: HexString | Uint8Array): Promise<Compact<u64>>;
+
+  /**
+   * ### Get block's timestamp by blockNumber
+   * @param number
+   */
+  getBlockTimestamp(number: number): Promise<Compact<u64>>;
 
   async getBlockTimestamp(blockOrHashOrNumber: HexString | Uint8Array | number | SignedBlock): Promise<Compact<u64>> {
     const block =

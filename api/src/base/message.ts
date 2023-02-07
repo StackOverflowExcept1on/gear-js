@@ -3,8 +3,8 @@ import { HexString } from '@polkadot/util/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { ReplaySubject } from 'rxjs';
 
-import { IMessageSendOptions, IMessageSendReplyOptions, OldMetadata } from '../types';
-import { ProgramMetadata, SendMessageError, SendReplyError, isProgramMeta } from '../common';
+import { IMessageSendOptions, IMessageSendReplyOptions } from '../types';
+import { ProgramMetadata, SendMessageError, SendReplyError } from '../common';
 import { encodePayload, validateGasLimit, validateValue } from '../utils';
 import { GTransaction } from './transaction';
 import { UserMessageSentData } from './events';
@@ -19,18 +19,13 @@ export class GMessage extends GTransaction {
    */
   send(
     { destination, value, gasLimit, ...args }: IMessageSendOptions,
-    metaOrHexRegistry?: ProgramMetadata | HexString | OldMetadata,
+    metaOrHexRegistry?: ProgramMetadata | HexString,
     typeIndexOrMessageType?: number | string,
   ): SubmittableExtrinsic<'promise', ISubmittableResult> {
     validateValue(value, this._api);
     validateGasLimit(gasLimit, this._api);
 
-    const payload = encodePayload(
-      args.payload,
-      metaOrHexRegistry,
-      isProgramMeta(metaOrHexRegistry) ? 'handle' : 'handle_input',
-      typeIndexOrMessageType,
-    );
+    const payload = encodePayload(args.payload, metaOrHexRegistry, 'handle', typeIndexOrMessageType);
 
     try {
       this.extrinsic = this._api.tx.gear.sendMessage(destination, payload, gasLimit, value || 0);
@@ -48,18 +43,13 @@ export class GMessage extends GTransaction {
    */
   sendReply(
     { value, gasLimit, replyToId, ...args }: IMessageSendReplyOptions,
-    metaOrHexRegistry?: ProgramMetadata | HexString | OldMetadata,
+    metaOrHexRegistry?: ProgramMetadata | HexString,
     typeIndexOrMessageType?: number | string,
   ): SubmittableExtrinsic<'promise', ISubmittableResult> {
     validateValue(value, this._api);
     validateGasLimit(gasLimit, this._api);
 
-    const payload = encodePayload(
-      args.payload,
-      metaOrHexRegistry,
-      isProgramMeta(metaOrHexRegistry) ? 'reply' : 'async_handle_input',
-      typeIndexOrMessageType,
-    );
+    const payload = encodePayload(args.payload, metaOrHexRegistry, 'reply', typeIndexOrMessageType);
 
     try {
       this.extrinsic = this._api.tx.gear.sendReply(replyToId, payload, gasLimit, value);

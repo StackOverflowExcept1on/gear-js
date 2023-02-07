@@ -4,6 +4,5 @@ export * from './common';
 export * from './types/interfaces';
 export * from './base/events';
 export * from './utils';
-export * from './base/events';
 export * from './types';
 export * from './apis';

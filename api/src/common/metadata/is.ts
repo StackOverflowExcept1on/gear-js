@@ -1,15 +1,5 @@
-import { OldMetadata } from '../../types';
 import { ProgramMetadata } from './programMetadata';
 import { StateMetadata } from './stateMetadata';
-
-export function isOldMeta(arg: unknown): arg is OldMetadata {
-  if (typeof arg === 'object') {
-    if (Object.hasOwn(arg, 'types')) {
-      return true;
-    }
-  }
-  return false;
-}
 
 export function isProgramMeta(arg: unknown): arg is ProgramMetadata {
   if (typeof arg !== 'object') {

@@ -1,10 +1,10 @@
-import { isHex, isString, isU8a, u8aToHex } from '@polkadot/util';
+import { isHex, isU8a, u8aToHex } from '@polkadot/util';
 import { HexString } from '@polkadot/util/types';
 
-import { CreateType, GearMetadata, ProgramMetadata, isOldMeta, isProgramMeta, isStateMeta } from '../common';
-import { HumanProgramMetadataRepr, OldMetadata } from '../types';
+import { CreateType, GearMetadata, isProgramMeta, isStateMeta } from '../common';
+import { HumanProgramMetadataRepr } from '../types';
 
-export function getRegistry(metaOrHexRegistry: HexString | OldMetadata): HexString {
+export function getRegistry(metaOrHexRegistry: HexString): HexString {
   if (!metaOrHexRegistry) {
     return undefined;
   }
@@ -12,18 +12,14 @@ export function getRegistry(metaOrHexRegistry: HexString | OldMetadata): HexStri
   if (isHex(metaOrHexRegistry)) {
     return metaOrHexRegistry;
   }
-
-  if (isOldMeta(metaOrHexRegistry)) {
-    return metaOrHexRegistry.types;
-  }
 }
 
-export function encodePayload<
-  M extends OldMetadata | GearMetadata = OldMetadata | GearMetadata,
-  T = M extends ProgramMetadata
-    ? keyof Omit<HumanProgramMetadataRepr, 'reg' | 'state'>
-    : keyof Omit<OldMetadata, 'types' | 'title'>,
->(payload: unknown, hexRegistryOrMeta: HexString | M, type: T, typeIndexOrMessageType?: number | string): HexString {
+export function encodePayload<M extends GearMetadata = GearMetadata>(
+  payload: unknown,
+  hexRegistryOrMeta: HexString | M,
+  type: keyof Omit<HumanProgramMetadataRepr, 'reg' | 'state' | 'signal'>,
+  typeIndexOrMessageType?: number | string,
+): HexString {
   if (payload === undefined) {
     return '0x';
   }
@@ -37,18 +33,7 @@ export function encodePayload<
   }
 
   if (isProgramMeta(hexRegistryOrMeta)) {
-    return hexRegistryOrMeta
-      .createType(
-        hexRegistryOrMeta.types[type as keyof Omit<HumanProgramMetadataRepr, 'reg' | 'state' | 'signal'>].input,
-        payload,
-      )
-      .toHex();
-  } else if (isOldMeta(hexRegistryOrMeta)) {
-    return CreateType.create(
-      isString(typeIndexOrMessageType) ? typeIndexOrMessageType : hexRegistryOrMeta[type as keyof OldMetadata],
-      payload,
-      hexRegistryOrMeta.types,
-    ).toHex();
+    return hexRegistryOrMeta.createType(hexRegistryOrMeta.types[type].input, payload).toHex();
   } else if (isStateMeta(hexRegistryOrMeta)) {
     // TODO
   } else if (isHex(hexRegistryOrMeta)) {
