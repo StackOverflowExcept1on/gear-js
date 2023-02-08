@@ -1,6 +1,6 @@
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { DispatchError, Event } from '@polkadot/types/interfaces';
-import { u128, u64 } from '@polkadot/types';
+import { Text, u128, u64 } from '@polkadot/types';
 import { RegistryError } from '@polkadot/types-codec/types';
 
 import { gearRpc, gearTypes } from '../common';
@@ -31,6 +31,10 @@ export class GApi extends ApiPromise {
   public blocks: GBlock;
   public defaultTypes: Record<string, unknown>;
   public provider: WsProvider;
+  private _chain: Text;
+  private _totalissuance: u128;
+  private _nodeName: Text;
+  private _nodeVersion: Text;
 
   constructor(options: GearApiOptions = {}) {
     const { types, providerAddress, ...restOptions } = options;
@@ -77,6 +81,10 @@ export class GApi extends ApiPromise {
     this.mailbox = new GMailbox(this);
     this.code = new GCode(this);
     this.waitlist = new GWaitlist(this);
+    this._chain = await this.rpc.system.chain();
+    this._totalissuance = await this.query.balances.totalIssuance();
+    this._nodeName = await this.rpc.system.name();
+    this._nodeVersion = await this.rpc.system.version();
   }
 
   static async create(options?: GearApiOptions): Promise<GApi> {
@@ -85,20 +93,20 @@ export class GApi extends ApiPromise {
     return api;
   }
 
-  async totalIssuance(): Promise<string> {
-    return (await this.query.balances.totalIssuance()).toHuman() as string;
+  get totalIssuance(): string {
+    return this._totalissuance.toHuman();
   }
 
-  async chain(): Promise<string> {
-    return (await this.rpc.system.chain()).toHuman();
+  get chain(): string {
+    return this._chain.toHuman();
   }
 
-  async nodeName(): Promise<string> {
-    return (await this.rpc.system.name()).toHuman();
+  get nodeName(): string {
+    return this._nodeName.toHuman();
   }
 
-  async nodeVersion(): Promise<string> {
-    return (await this.rpc.system.version()).toHuman();
+  get nodeVersion(): string {
+    return this._nodeVersion.toHuman();
   }
 
   get existentialDeposit(): u128 {
@@ -129,7 +137,12 @@ export class GApi extends ApiPromise {
   }
 }
 
-export async function getSpec(address = 'ws://127.0.0.1:9944'): Promise<{ specName: string; specVersion: number }> {
+interface NetworkSpec {
+  specName: string;
+  specVersion: number;
+}
+
+export async function getSpec(address = 'ws://127.0.0.1:9944'): Promise<NetworkSpec> {
   const provider = new WsProvider(address);
   provider.connect();
   await provider.isReady;
