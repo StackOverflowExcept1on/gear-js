@@ -2,9 +2,9 @@ import { KeyringPair } from '@polkadot/keyring/types';
 import { RegistryError } from '@polkadot/types-codec/types';
 
 import { getAccount, sleep } from './utilsFunctions';
-import { GearApi } from '../src';
+import { GApi } from '../src';
 
-const api = new GearApi();
+const api = new GApi();
 let alice: KeyringPair;
 
 beforeAll(async () => {

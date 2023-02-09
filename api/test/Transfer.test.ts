@@ -1,7 +1,7 @@
-import { GearApi, TransferData } from '../src';
+import { GApi, TransferData } from '../src';
 import { getAccount, sleep } from './utilsFunctions';
 
-const api = new GearApi();
+const api = new GApi();
 let alice, bob;
 
 beforeAll(async () => {

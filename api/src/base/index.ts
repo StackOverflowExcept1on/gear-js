@@ -1,5 +1,5 @@
 import '@polkadot/api-augment';
-export { GApi } from './api';
+export * from './api';
 export { GBalance } from './balance';
 export { GBlock } from './blocks';
 export { GCode } from './code';

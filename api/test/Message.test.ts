@@ -3,12 +3,12 @@ import { KeyringPair } from '@polkadot/keyring/types';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 
-import { GearApi, getProgramMetadata } from '../src';
+import { GApi, getProgramMetadata } from '../src';
 import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { TARGET } from './config';
 import { decodeAddress } from '../src/utils';
 
-const api = new GearApi();
+const api = new GApi();
 let alice: KeyringPair;
 let programId: HexString;
 let messageToClaim: HexString;

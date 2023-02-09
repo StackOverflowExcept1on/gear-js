@@ -4,13 +4,13 @@ import { join } from 'path';
 import { readFileSync } from 'fs';
 import { u64 } from '@polkadot/types-codec';
 
-import { GearApi, getProgramMetadata } from '../src';
+import { GApi, getProgramMetadata } from '../src';
 import { PROGRAMS_DIR, TARGET } from './config';
 import { checkInit, getAccount, listenToUserMessageSent, sendTransaction, sleep } from './utilsFunctions';
 import { GasInfo } from '../src/types';
 import { decodeAddress } from '../src/utils';
 
-const api = new GearApi();
+const api = new GApi();
 let alice: KeyringPair;
 let aliceRaw: HexString;
 let programId: HexString;

@@ -1,12 +1,12 @@
 import { KeyringPair } from '@polkadot/keyring/types';
 
-import { DebugMode, GearApi } from '../src';
+import { GApi, GDebugMode } from '../src';
 import { getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { GEAR_EXAMPLES_WASM_DIR } from './config';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 
-const api = new GearApi();
+const api = new GApi();
 let alice: KeyringPair;
 
 beforeAll(async () => {
@@ -20,7 +20,7 @@ afterAll(async () => {
 });
 
 describe.skip('DebugMode', () => {
-  const debug = new DebugMode(api);
+  const debug = new GDebugMode(api);
 
   test('enable debug mode', async () => {
     debug.enable();

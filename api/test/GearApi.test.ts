@@ -1,8 +1,7 @@
-import { Gear, GearApi } from '../src';
-import { getSpec } from '../src/GearApi';
+import { GApi, Stable, getSpec } from '../src';
 import { sleep } from './utilsFunctions';
 
-let api: Gear.Api;
+let api: Stable.Api;
 
 afterAll(async () => {
   await api.disconnect();
@@ -18,16 +17,16 @@ describe('GearApi', () => {
   });
 
   test('connect to api', async () => {
-    api = await GearApi.create();
+    api = await GApi.create();
     expect(api.isConnected).toBeTruthy();
   });
 
   test('chain', async () => {
-    expect(await api.chain()).toBe('Development');
+    expect(api.chain).toBe('Development');
   });
 
   test('nodeName', async () => {
-    expect(await api.nodeName()).toBe('Gear Node');
+    expect(api.nodeName).toBe('Gear Node');
   });
 
   test('runtimeChain', async () => {
@@ -39,11 +38,11 @@ describe('GearApi', () => {
   });
 
   test('nodeVersion', async () => {
-    expect(await api.nodeVersion()).toBeDefined();
+    expect(api.nodeVersion).toBeDefined();
   });
 
   test('totalIssuance', async () => {
-    expect(await api.totalIssuance()).toBeDefined();
+    expect(api.totalIssuance).toBeDefined();
   });
 
   test('existentialDeposit', () => {

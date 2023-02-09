@@ -6,18 +6,15 @@ import { Transfer, UserMessageSent } from './GearEvents';
 import { GApi } from '..';
 import { IGearEvent } from './types';
 
-export class GEvents {
+export class GEvents<GearEvent extends IGearEvent = IGearEvent> {
   constructor(private api: GApi) {}
 
-  subscribeToGearEvent<M extends keyof IGearEvent>(
-    method: M,
-    callback: (event: IGearEvent[M]) => void | Promise<void>,
-  ) {
+  subscribeToGearEvent<M extends keyof GearEvent>(method: M, callback: (event: GearEvent[M]) => void | Promise<void>) {
     return this.api.query.system.events((events) => {
       events
         .filter(({ event }) => event.method === method)
         .forEach(({ event }) => {
-          callback(event as IGearEvent[M]);
+          callback(event as GearEvent[M]);
         });
     });
   }

@@ -2,11 +2,11 @@ import { HexString } from '@polkadot/util/types';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 
-import { GApi, Gear } from '../src';
+import { GApi, Latest } from '../src';
 import { getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { GEAR_EXAMPLES_WASM_DIR } from './config';
 
-const api: Gear.Api = new GApi();
+const api: Latest.Api = new GApi();
 const accounts = {};
 const code = readFileSync(join(GEAR_EXAMPLES_WASM_DIR, 'demo_sum.opt.wasm'));
 let codeId: HexString;

@@ -5,11 +5,11 @@ import { bufferToU8a } from '@polkadot/util';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 
-import { Gear, GearApi, getProgramMetadata } from '../src';
+import { GApi, Stable, getProgramMetadata } from '../src';
 import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { TARGET } from './config';
 
-const api: Gear.Api = new GearApi();
+const api: Stable.Api = new GApi();
 
 let alice: KeyringPair;
 let codeId: HexString;
