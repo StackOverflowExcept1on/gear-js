@@ -1,18 +1,5 @@
+import { CodeChangedData, DebugData, DebugModeData, MessageEnqueuedData, MessageWaitedData, MessageWakenData, MessagesDispatchedData, ProgramChangedData, TransferData, UserMessageReadData, UserMessageSentData } from './events-data';
 import { GenericEvent, GenericEventData } from '@polkadot/types';
-
-import {
-  CodeChangedData,
-  DebugData,
-  DebugModeData,
-  MessageEnqueuedData,
-  MessageWaitedData,
-  MessageWakenData,
-  MessagesDispatchedData,
-  ProgramChangedData,
-  TransferData,
-  UserMessageReadData,
-  UserMessageSentData,
-} from './GearEventData';
 
 export interface GearEvent<D extends GenericEventData> extends GenericEvent {
   data: D;
@@ -39,3 +26,18 @@ export type DebugDataSnapshot = GearEvent<DebugData>;
 export type DebugMode = GearEvent<DebugModeData>;
 
 export type Transfer = GearEvent<TransferData>;
+
+
+
+export interface IGearEvent {
+  MessageEnqueued: MessageEnqueued;
+  UserMessageSent: UserMessageSent;
+  UserMessageRead: UserMessageRead;
+  MessagesDispatched: MessagesDispatched;
+  MessageWaited: MessageWaited;
+  MessageWaken: MessageWaken;
+  CodeChanged: CodeChanged;
+  ProgramChanged: ProgramChanged;
+  DebugDataSnapshot: DebugDataSnapshot;
+  DebugMode: DebugMode;
+}

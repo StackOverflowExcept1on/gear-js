@@ -5,3 +5,5 @@ export * from './message-woken';
 export * from './messages-dispatched';
 export * from './program-changed';
 export * from './user-message-read';
+export * from './events-data';
+export * from './events';

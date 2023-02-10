@@ -1,21 +1,16 @@
 import { AccountId32, BlockNumber } from '@polkadot/types/interfaces';
-import { BTreeMap, BTreeSet, Bool, GenericEventData, Option, Vec, u128, u32 } from '@polkadot/types';
+import { BTreeMap,BTreeSet, Bool, GenericEventData, Option, Vec, u128, u32 } from '@polkadot/types';
+import { CodeId, MessageId, ProgramId } from '../ids';
+import { Entry, UserMessageSentMessage } from '../message';
 import { GasNodeId, ReservationId } from 'types/interfaces/ids/gas';
+import { ProgramDetails, QueuedDispatch } from './debug-data-snapshot';
+import { CodeChangeKind } from './code-changed';
+import { DispatchStatus } from './messages-dispatched';
+import { MessageWaitedReason } from './message-waited';
+import { MessageWokenReason } from './message-woken';
+import { ProgramChangedKind } from './program-changed';
+import { UserMessageReadReason } from './user-message-read';
 
-import {
-  CodeChangeKind,
-  CodeId,
-  DispatchStatus,
-  Entry,
-  MessageId,
-  MessageWaitedReason,
-  MessageWokenReason,
-  ProgramChangedKind,
-  ProgramId,
-  UserMessageReadReason,
-  UserMessageSentMessage,
-} from '../../types';
-import { ProgramDetails, QueuedDispatch } from '../../types';
 
 export class GearEventData extends GenericEventData {
   constructor(data: GenericEventData) {
