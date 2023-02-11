@@ -6,10 +6,11 @@ import { ReplaySubject } from 'rxjs';
 import { IMessageSendOptions, IMessageSendReplyOptions } from '../types';
 import { ProgramMetadata, SendMessageError, SendReplyError } from '../common';
 import { encodePayload, validateGasLimit, validateValue } from '../utils';
+import { Base } from '../apis';
 import { GTransaction } from './transaction';
-import { UserMessageSentData } from './events';
+import { UserMessageSentData } from '../types';
 
-export class GMessage extends GTransaction {
+export class GMessage extends GTransaction implements Base.GMessage {
   /**
    * ## Send Message
    * @param message

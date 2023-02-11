@@ -4,7 +4,7 @@ import { HexString } from '@polkadot/util/types';
 
 import { GasLimit, Value } from '../types';
 import { GApi } from '../base';
-import { ValidationError } from '../common';
+import { ValidationError } from '../common/errors';
 
 export function validateValue(value: Value | undefined, api: GApi) {
   if (!value) return;

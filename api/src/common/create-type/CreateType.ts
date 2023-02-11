@@ -4,7 +4,8 @@ import { isHex, isU8a } from '@polkadot/util';
 import { HexString } from '@polkadot/util/types';
 import { RegistryTypes } from '@polkadot/types-codec/types';
 
-import { getTypeAndPayload, isJSON, toJSON, typeIsGeneric, typeIsString } from '../../utils';
+import { getTypeAndPayload, typeIsGeneric, typeIsString } from '../../utils/types';
+import { isJSON, toJSON } from '../../utils/json';
 import { TypeInfoRegistry } from './TypeInfoReg';
 import { gearTypes } from '../default';
 

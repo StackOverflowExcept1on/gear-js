@@ -2,10 +2,11 @@ import { Codec } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
 
 import { CreateType, ProgramMetadata, StateMetadata } from '../common';
+import { Base } from '../apis';
 import { GProgramStorage } from './storage';
 import { ReadStateArgs } from '../types';
 
-export class GProgramState extends GProgramStorage {
+export class GProgramState extends GProgramStorage implements Base.GProgramState {
   /**
    * ## Read full program state
    * @param args `program id` and `block hash` (optional) at which it's neccessary to read state

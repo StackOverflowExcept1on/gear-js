@@ -2,26 +2,23 @@ import { HexString } from '@polkadot/util/types';
 import { UnsubscribePromise } from '@polkadot/api/types';
 
 import { IBalanceCallback, IGearEvent, ISystemAccountInfo, Transfer, UserMessageSent } from '../types';
+import { Base } from '../apis';
 import { GApi } from '../base';
 
-export class GEvents<GearEvent extends IGearEvent = IGearEvent> {
+export class GEvents implements Base.GEvents {
   constructor(private api: GApi) {}
 
-  subscribeToGearEvent<M extends keyof GearEvent>(method: M, callback: (event: GearEvent[M]) => void | Promise<void>) {
+  subscribeToGearEvent<M extends keyof IGearEvent>(
+    method: M,
+    callback: (event: IGearEvent[M]) => void | Promise<void>,
+  ) {
     return this.api.query.system.events((events) => {
       events
         .filter(({ event }) => event.method === method)
         .forEach(({ event }) => {
-          callback(event as GearEvent[M]);
+          callback(event as IGearEvent[M]);
         });
     });
-  }
-
-  #umsActorsMatch(from: HexString, to: HexString, event: UserMessageSent): boolean {
-    if (event.data.message.source.eq(from) || event.data.message.destination.eq(to)) {
-      return true;
-    }
-    return false;
   }
 
   subscribeToUserMessageSentByActor(
@@ -32,7 +29,7 @@ export class GEvents<GearEvent extends IGearEvent = IGearEvent> {
       events
         .filter(({ event }) => event.method === 'UserMessageSent')
         .forEach(({ event }) => {
-          if (this.#umsActorsMatch(options.from, options.to, event as UserMessageSent)) {
+          if (umsActorsMatch(options.from, options.to, event as UserMessageSent)) {
             callback(event as UserMessageSent);
           }
         });
@@ -61,4 +58,11 @@ export class GEvents<GearEvent extends IGearEvent = IGearEvent> {
       }
     });
   }
+}
+
+function umsActorsMatch(from: HexString, to: HexString, event: UserMessageSent): boolean {
+  if (event.data.message.source.eq(from) || event.data.message.destination.eq(to)) {
+    return true;
+  }
+  return false;
 }

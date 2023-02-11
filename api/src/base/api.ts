@@ -1,9 +1,10 @@
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { DispatchError, Event } from '@polkadot/types/interfaces';
-import { Text, u128, u64 } from '@polkadot/types';
+import { u128, u64 } from '@polkadot/types';
 import { RegistryError } from '@polkadot/types-codec/types';
 
 import { gearRpc, gearTypes } from '../common';
+import { Base } from '../apis';
 import { GBalance } from './balance';
 import { GBlock } from './blocks';
 import { GClaimValue } from './claim';
@@ -17,7 +18,7 @@ import { GProgramStorage } from './storage';
 import { GWaitlist } from './waitlist';
 import { GearApiOptions } from '../types';
 
-export class GApi extends ApiPromise {
+export class GApi extends ApiPromise implements Base.GApi {
   public program: GProgram;
   public programState: GProgramState;
   public programStorage: GProgramStorage;
@@ -31,10 +32,10 @@ export class GApi extends ApiPromise {
   public blocks: GBlock;
   public defaultTypes: Record<string, unknown>;
   public provider: WsProvider;
-  private _chain: Text;
-  private _totalissuance: u128;
-  private _nodeName: Text;
-  private _nodeVersion: Text;
+  public chain: string;
+  public totalissuance: u128;
+  public nodeName: string;
+  public nodeVersion: string;
 
   constructor(options: GearApiOptions = {}) {
     const { types, providerAddress, ...restOptions } = options;
@@ -81,32 +82,16 @@ export class GApi extends ApiPromise {
     this.mailbox = new GMailbox(this);
     this.code = new GCode(this);
     this.waitlist = new GWaitlist(this);
-    this._chain = await this.rpc.system.chain();
-    this._totalissuance = await this.query.balances.totalIssuance();
-    this._nodeName = await this.rpc.system.name();
-    this._nodeVersion = await this.rpc.system.version();
+    this.chain = (await this.rpc.system.chain()).toHuman();
+    this.totalissuance = await this.query.balances.totalIssuance();
+    this.nodeName = (await this.rpc.system.name()).toHuman();
+    this.nodeVersion = (await this.rpc.system.version()).toHuman();
   }
 
   static async create(options?: GearApiOptions): Promise<GApi> {
     const api = new GApi(options);
     await api.isReady;
     return api;
-  }
-
-  get totalIssuance(): string {
-    return this._totalissuance.toHuman();
-  }
-
-  get chain(): string {
-    return this._chain.toHuman();
-  }
-
-  get nodeName(): string {
-    return this._nodeName.toHuman();
-  }
-
-  get nodeVersion(): string {
-    return this._nodeVersion.toHuman();
   }
 
   get existentialDeposit(): u128 {

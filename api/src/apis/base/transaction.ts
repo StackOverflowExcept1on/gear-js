@@ -1,17 +1,14 @@
 import { AddressOrPair, SignerOptions, SubmittableExtrinsic } from '@polkadot/api/types';
 import { Hash, RuntimeDispatchInfo } from '@polkadot/types/interfaces';
 import { ISubmittableResult } from '@polkadot/types/types';
-import { isFunction } from '@polkadot/util';
 
-import { Base } from '../apis';
-import { GApi } from './api';
-import { TransactionError } from '../common';
-import { TransactionStatusCb } from '../types';
+import GApi from './api';
+import { TransactionStatusCb } from '../../types';
 
-export class GTransaction implements Base.GTransaction {
+declare class GTransaction {
   extrinsic: SubmittableExtrinsic<'promise', ISubmittableResult>;
 
-  constructor(protected _api: GApi) {}
+  constructor(_api: GApi);
 
   signAndSend(account: AddressOrPair, callback: TransactionStatusCb): Promise<() => void>;
 
@@ -23,26 +20,11 @@ export class GTransaction implements Base.GTransaction {
     callback: TransactionStatusCb,
   ): Promise<() => void>;
 
-  public async signAndSend(
+  public signAndSend(
     account: AddressOrPair,
     optionsOrCallback?: Partial<SignerOptions> | TransactionStatusCb,
     optionalCallback?: TransactionStatusCb,
-  ): Promise<Hash | (() => void)> {
-    const [options, callback] = isFunction(optionsOrCallback)
-      ? [undefined, optionsOrCallback]
-      : [optionsOrCallback, optionalCallback];
-
-    try {
-      return await this.extrinsic.signAndSend(account, options, callback);
-    } catch (error) {
-      const errorCode = +error.message.split(':')[0];
-      if (errorCode === 1010) {
-        throw new TransactionError('Account balance too low');
-      } else {
-        throw new TransactionError(error.message);
-      }
-    }
-  }
+  ): Promise<Hash | (() => void)>;
 
   /**
    *
@@ -58,7 +40,7 @@ export class GTransaction implements Base.GTransaction {
    * consolg.log(transactionFee);
    * ```
    */
-  paymentInfo(account: AddressOrPair, options?: Partial<SignerOptions>): Promise<RuntimeDispatchInfo> {
-    return this.extrinsic.paymentInfo(account, options);
-  }
+  paymentInfo(account: AddressOrPair, options?: Partial<SignerOptions>): Promise<RuntimeDispatchInfo>;
 }
+
+export default GTransaction;

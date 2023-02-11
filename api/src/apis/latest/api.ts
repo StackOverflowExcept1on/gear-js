@@ -1,4 +1,4 @@
-import { GApi } from '../../base/api.js';
+import { GApi } from '../base';
 
 declare class Api extends GApi {}
 

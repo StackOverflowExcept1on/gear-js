@@ -1,9 +1,10 @@
 import { AnyJson } from '@polkadot/types/types';
 
 import { TypeTree, enumTypes } from './interfaces';
-import { isJSON, splitByCommas, toJSON } from '../../utils';
+import { isJSON, toJSON } from '../../utils/json';
 import { REGULAR_EXP } from '../../utils/regexp';
 import generate from './generate';
+import { splitByCommas } from '../../utils/string';
 
 function getIfTuple(typeName: string, types: AnyJson, raw: boolean): TypeTree | TypeTree[] | null {
   if (typeName.includes(':')) return null;

@@ -1,14 +1,11 @@
 import { HexString } from '@polkadot/util/types';
-import { isHex } from '@polkadot/util';
 
-import { GasInfo, PayloadType, Value } from '../types';
-import { Base } from '../apis';
-import { GApi } from './api';
-import { ProgramMetadata } from '../common';
-import { encodePayload } from '../utils/create-payload';
+import { GasInfo, PayloadType, Value } from '../../types';
+import GApi from './api';
+import { ProgramMetadata } from '../../common';
 
-export class GGas implements Base.GGas {
-  constructor(private _api: GApi) {}
+declare class GGas {
+  constructor(_api: GApi);
 
   /**
    * ### Get gas spent of init message using upload_program extrinsic
@@ -49,7 +46,7 @@ export class GGas implements Base.GGas {
    * );
    * ```
    */
-  async initUpload(
+  initUpload(
     sourceId: HexString,
     code: HexString | Buffer,
     payload: PayloadType,
@@ -57,16 +54,7 @@ export class GGas implements Base.GGas {
     allowOtherPanics?: boolean,
     meta?: ProgramMetadata,
     typeIndexOrTypeName?: number,
-  ): Promise<GasInfo> {
-    const _payload = encodePayload(payload, meta, 'init', typeIndexOrTypeName);
-    return this._api.rpc['gear'].calculateInitUploadGas(
-      sourceId,
-      isHex(code) ? code : this._api.createType('Bytes', Array.from(code)).toHex(),
-      _payload,
-      value || 0,
-      allowOtherPanics || true,
-    );
-  }
+  ): Promise<GasInfo>;
 
   /**
    * ### Get gas spent of init message using create_program extrinsic
@@ -97,7 +85,7 @@ export class GGas implements Base.GGas {
    * console.log(gas.toJSON());
    * ```
    */
-  async initCreate(
+  initCreate(
     sourceId: HexString,
     codeId: HexString,
     payload: PayloadType,
@@ -105,16 +93,7 @@ export class GGas implements Base.GGas {
     allowOtherPanics?: boolean,
     meta?: ProgramMetadata,
     typeIndexOrTypeName?: number,
-  ): Promise<GasInfo> {
-    const _payload = encodePayload(payload, meta, 'init', typeIndexOrTypeName);
-    return this._api.rpc['gear'].calculateInitCreateGas(
-      sourceId,
-      codeId,
-      _payload,
-      value || 0,
-      allowOtherPanics || true,
-    );
-  }
+  ): Promise<GasInfo>;
 
   /**
    * ### Get gas spent of hanle message
@@ -146,7 +125,7 @@ export class GGas implements Base.GGas {
    * console.log(gas.toHuman());
    * ```
    */
-  async handle(
+  handle(
     sourceId: HexString,
     destinationId: HexString,
     payload: PayloadType,
@@ -154,16 +133,7 @@ export class GGas implements Base.GGas {
     allowOtherPanics?: boolean,
     meta?: ProgramMetadata,
     typeIndexOrTypeName?: number,
-  ): Promise<GasInfo> {
-    const _payload = encodePayload(payload, meta, 'handle', typeIndexOrTypeName);
-    return this._api.rpc['gear'].calculateHandleGas(
-      sourceId,
-      destinationId,
-      _payload,
-      value || 0,
-      allowOtherPanics || true,
-    );
-  }
+  ): Promise<GasInfo>;
 
   /**
    * ### Get gas spent of reply message
@@ -192,7 +162,7 @@ export class GGas implements Base.GGas {
    * console.log(gas.toJSON());
    * ```
    */
-  async reply(
+  reply(
     sourceId: HexString,
     messageId: HexString,
     exitCode: number,
@@ -201,15 +171,7 @@ export class GGas implements Base.GGas {
     allowOtherPanics?: boolean,
     meta?: ProgramMetadata,
     typeIndexOrTypeName?: number,
-  ): Promise<GasInfo> {
-    const _payload = encodePayload(payload, meta, 'reply', typeIndexOrTypeName);
-    return this._api.rpc['gear'].calculateReplyGas(
-      sourceId,
-      messageId,
-      exitCode,
-      _payload,
-      value || 0,
-      allowOtherPanics || true,
-    );
-  }
+  ): Promise<GasInfo>;
 }
+
+export default GGas;

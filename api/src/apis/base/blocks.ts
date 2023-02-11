@@ -1,23 +1,18 @@
 import { AnyNumber, AnyTuple } from '@polkadot/types/types';
 import { BlockHash, BlockNumber, SignedBlock } from '@polkadot/types/interfaces';
 import { Compact, GenericExtrinsic, Vec, u64 } from '@polkadot/types';
-import { isHex, isNumber, isU8a } from '@polkadot/util';
 import { FrameSystemEventRecord } from '@polkadot/types/lookup';
 import { HeaderExtended } from '@polkadot/api-derive/types';
 import { HexString } from '@polkadot/util/types';
 import { Observable } from 'rxjs';
 import { PromiseResult } from '@polkadot/api/types';
 
-import { CreateType, GetBlockError } from '../common';
-import { Base } from '../apis';
-import { GApi } from './api';
+import GApi from './api';
 
-export class GBlock implements Base.GBlock {
+declare class GBlock {
   subscribeNewHeads: PromiseResult<() => Observable<HeaderExtended>>;
 
-  constructor(private api: GApi) {
-    this.subscribeNewHeads = api.derive.chain.subscribeNewHeads;
-  }
+  constructor(api: GApi);
 
   /**
    * Get data of particular block by blockHash
@@ -45,33 +40,21 @@ export class GBlock implements Base.GBlock {
    * @param hashOrNumber
    * @returns
    */
-  async get(hashOrNumber: HexString | Uint8Array | number): Promise<SignedBlock> {
-    const hash = isU8a(hashOrNumber) || isHex(hashOrNumber) ? hashOrNumber : await this.getBlockHash(+hashOrNumber);
-    try {
-      return await this.api.rpc.chain.getBlock(hash);
-    } catch (error) {
-      throw new GetBlockError(error.message, hash);
-    }
-  }
+  get(hashOrNumber: HexString | Uint8Array | number): Promise<SignedBlock>;
 
   /**
    * Get blockHash by number
    * @param number number of block
    * @returns blockHash
    */
-  async getBlockHash(number: AnyNumber | BlockNumber): Promise<BlockHash> {
-    return await this.api.rpc.chain.getBlockHash(number);
-  }
+  getBlockHash(number: AnyNumber | BlockNumber): Promise<BlockHash>;
 
   /**
    * Get block number
    * @param hash
    * @returns Compact<BlockNumber>
    */
-  async getBlockNumber(hash: `0x${string}` | Uint8Array): Promise<Compact<BlockNumber>> {
-    const block = await this.get(hash);
-    return block.block.header.number;
-  }
+  getBlockNumber(hash: `0x${string}` | Uint8Array): Promise<Compact<BlockNumber>>;
 
   /**
    * ### Get block's timestamp
@@ -91,43 +74,27 @@ export class GBlock implements Base.GBlock {
    */
   getBlockTimestamp(number: number): Promise<Compact<u64>>;
 
-  async getBlockTimestamp(blockOrHashOrNumber: HexString | Uint8Array | number | SignedBlock): Promise<Compact<u64>> {
-    const block =
-      isHex(blockOrHashOrNumber) || isU8a(blockOrHashOrNumber) || isNumber(blockOrHashOrNumber)
-        ? await this.get(blockOrHashOrNumber)
-        : blockOrHashOrNumber;
-
-    const tsAsU8a = block.block.extrinsics.find(
-      (value) => value.method.method === 'set' && value.method.section === 'timestamp',
-    ).data;
-    const ts = CreateType.create('Compact<u64>', tsAsU8a);
-    return ts as Compact<u64>;
-  }
+  getBlockTimestamp(blockOrHashOrNumber: HexString | Uint8Array | number | SignedBlock): Promise<Compact<u64>>;
 
   /**
    * Get all extrinsic of particular block
    * @param blockHash hash of particular block
    * @returns Vec of extrinsics
    */
-  async getExtrinsics(blockHash: `0x${string}` | Uint8Array): Promise<Vec<GenericExtrinsic<AnyTuple>>> {
-    return (await this.get(blockHash)).block.extrinsics;
-  }
+  getExtrinsics(blockHash: `0x${string}` | Uint8Array): Promise<Vec<GenericExtrinsic<AnyTuple>>>;
 
   /**
    * Get all events of particular block
    * @param blockHash hash of particular block
    * @returns Vec of events
    */
-  async getEvents(blockHash: `0x${string}` | Uint8Array): Promise<Vec<FrameSystemEventRecord>> {
-    const apiAt = await this.api.at(blockHash);
-    return apiAt.query.system.events();
-  }
+  getEvents(blockHash: `0x${string}` | Uint8Array): Promise<Vec<FrameSystemEventRecord>>;
 
   /**
    * Get hash of last finalized block
    * @returns Hash of finalized head
    */
-  async getFinalizedHead(): Promise<BlockHash> {
-    return this.api.rpc.chain.getFinalizedHead();
-  }
+  getFinalizedHead(): Promise<BlockHash>;
 }
+
+export default GBlock;
