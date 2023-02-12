@@ -1,57 +1,38 @@
-import { FormEvent, useState, ChangeEvent } from 'react';
-import { useAlert } from '@gear-js/react-hooks';
 import { Modal, Input, Button } from '@gear-js/ui';
+import { useForm } from '@mantine/form';
 
 import { ModalProps } from 'entities/modal';
 import { NodeSection } from 'entities/node';
 import { isNodeAddressValid } from 'shared/helpers';
-import { ReactComponent as plusSVG } from 'shared/assets/images/actions/plus.svg';
+import { ReactComponent as PlusSVG } from 'shared/assets/images/actions/plus.svg';
 
+import { isNodeExists } from '../helpers';
 import styles from './NetworkModal.module.scss';
 
 type Props = ModalProps & {
   nodeSections: NodeSection[];
   addNetwork: (address: string) => void;
 };
-// TODO: use Final Form
+
+const initialValues = { address: '' };
+
 const NetworkModal = ({ nodeSections, addNetwork, onClose }: Props) => {
-  const alert = useAlert();
-
-  const [address, setAddress] = useState('');
-
-  const isNodeExist = (nodeAddress: string) => {
-    const nodes = nodeSections.flatMap((section) => section.nodes);
-
-    return nodes.some((node) => node.address === nodeAddress);
+  const validate = {
+    address: (value: string) => {
+      if (!isNodeAddressValid(value)) return 'Address is not valid';
+      if (isNodeExists(nodeSections, value)) return 'Address already exists';
+    },
   };
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => setAddress(event.target.value);
+  const { getInputProps, onSubmit } = useForm({ initialValues, validate });
 
-  const handleSubmit = (event: FormEvent) => {
-    event.preventDefault();
-
-    const trimmedAddress = address.trim();
-
-    if (!isNodeAddressValid(trimmedAddress)) {
-      alert.error('Address not valid!');
-
-      return;
-    }
-
-    if (isNodeExist(trimmedAddress)) {
-      alert.error('Address already exist!');
-
-      return;
-    }
-
-    addNetwork(trimmedAddress);
-  };
+  const handleSubmit = onSubmit(({ address }) => addNetwork(address));
 
   return (
     <Modal heading="Add Network" close={onClose}>
       <form className={styles.form} onSubmit={handleSubmit}>
-        <Input name="network" value={address} onChange={handleChange} />
-        <Button type="submit" icon={plusSVG} text="Add network" className={styles.addNetworkBtn} />
+        <Input {...getInputProps('address')} />
+        <Button type="submit" icon={PlusSVG} text="Add network" className={styles.addNetworkBtn} />
       </form>
     </Modal>
   );
