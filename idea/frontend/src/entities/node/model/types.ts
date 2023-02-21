@@ -3,9 +3,8 @@ type Node = {
   address: string;
 };
 
-type NodeSection = {
-  caption: string;
-  nodes: Node[];
+type NodeSections = {
+  [chain: string]: Node[];
 };
 
-export type { Node, NodeSection };
+export type { Node, NodeSections };

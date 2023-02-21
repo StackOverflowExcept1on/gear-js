@@ -1,3 +1,3 @@
-import { Node, NodeSection } from './model/types';
+import { Node, NodeSections } from './model/types';
 
-export type { Node, NodeSection };
+export type { Node, NodeSections };

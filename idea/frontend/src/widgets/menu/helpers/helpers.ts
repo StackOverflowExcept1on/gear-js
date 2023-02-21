@@ -1,35 +1,23 @@
-import { Node, NodeSection } from 'entities/node';
+import { NodeSections, Node } from 'entities/node';
 import { LocalStorage } from 'shared/config';
 
-import { DEVELOPMENT_SECTION } from '../model/consts';
-
-const isDevSection = (section: NodeSection) => section.caption === DEVELOPMENT_SECTION;
-
-const getLocalNodes = (nodes: Node[]): Node[] =>
-  nodes.reduce((result, node) => {
-    if (node.isCustom) {
-      result.push(node);
-    }
-
-    return result;
-  }, [] as Node[]);
-
-const getLocalNodesFromLS = (): Node[] => {
+const getLocalNodeSections = () => {
   const nodes = localStorage.getItem(LocalStorage.Nodes);
 
-  return nodes ? JSON.parse(nodes) : [];
+  return nodes ? (JSON.parse(nodes) as NodeSections) : undefined;
 };
 
-const concatNodes = (nodeSections: NodeSection[], value: Node | Node[]) =>
-  nodeSections.map((section) => {
-    if (isDevSection(section)) {
-      return {
-        caption: section.caption,
-        nodes: section.nodes.concat(value),
-      };
-    }
+const getMergedNodeSections = (nodeSections: NodeSections, localNodeSections: NodeSections) => {
+  const map = new Map<string, Node[]>();
 
-    return section;
+  Object.entries(nodeSections).forEach(([chain, nodes]) => map.set(chain, nodes));
+  Object.entries(localNodeSections).forEach(([chain, localNodes]) => {
+    const nodes = map.get(chain);
+
+    map.set(chain, nodes ? nodes.concat(localNodes) : localNodes);
   });
 
-export { concatNodes, isDevSection, getLocalNodes, getLocalNodesFromLS };
+  return Object.fromEntries(map);
+};
+
+export { getLocalNodeSections, getMergedNodeSections };

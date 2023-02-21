@@ -6,7 +6,7 @@ import { AnimationTimeout } from 'shared/config';
 import { ReactComponent as plusSVG } from 'shared/assets/images/actions/plus.svg';
 import { ReactComponent as closeSVG } from 'shared/assets/images/actions/close.svg';
 import { ReactComponent as switchSVG } from 'shared/assets/images/actions/switch.svg';
-import { NodeSection } from 'entities/node';
+import { NodeSections } from 'entities/node';
 
 import { NodesList } from '../nodesList';
 import styles from './NodesPopup.module.scss';
@@ -15,10 +15,10 @@ type Props = {
   chain: string | undefined;
   isLoading: boolean;
   nodeAddress: string;
-  nodeSections: NodeSection[];
+  nodeSections: NodeSections;
   selectedNode: string;
   selectNode: (address: string) => void;
-  removeNode: (address: string) => void;
+  removeNode: (chain: string, address: string) => void;
   onSwitchButtonClick: () => void;
   onAddButtonClick: () => void;
   onCloseButtonClick: () => void;

@@ -5,10 +5,9 @@ import { CSSTransition } from 'react-transition-group';
 
 import { useApp, useModal, useOutsideClick } from 'hooks';
 import { AnimationTimeout, LocalStorage, NODE_ADRESS_URL_PARAM } from 'shared/config';
-
 import { useNodes } from 'widgets/menu/helpers/useNodes';
-
 import { OnboardingTooltip } from 'shared/ui/onboardingTooltip';
+
 import { NodesButton } from './nodesButton';
 import { NodesPopup } from './nodesPopup';
 
@@ -18,7 +17,7 @@ type Props = {
 
 const NodesSwitch = ({ isButtonFullWidth }: Props) => {
   const { api, isApiReady } = useApi();
-  const { nodeSections, isNodesLoading, addLocalNode, removeLocalNode } = useNodes();
+  const { nodeSections, isNodesLoading, addNode, removeNode } = useNodes();
 
   const { nodeAddress } = useApp();
   const { showModal, closeModal } = useModal();
@@ -45,8 +44,8 @@ const NodesSwitch = ({ isButtonFullWidth }: Props) => {
     setTimeout(() => setIsModalHidden(true), 10);
   };
 
-  const handleAddButtonClick = (address: string) => {
-    addLocalNode(address);
+  const handleAddButtonClick = (chainName: string, address: string) => {
+    addNode(chainName, address);
     closeNetworkModal();
 
     setTimeout(() => document.getElementById(address)?.scrollIntoView(false), 10);
@@ -82,20 +81,22 @@ const NodesSwitch = ({ isButtonFullWidth }: Props) => {
         />
       </OnboardingTooltip>
 
-      <CSSTransition in={isNodesOpen} timeout={AnimationTimeout.Default} mountOnEnter unmountOnExit>
-        <NodesPopup
-          chain={chain}
-          isLoading={isNodesLoading}
-          nodeAddress={nodeAddress}
-          nodeSections={nodeSections}
-          selectedNode={selectedNode}
-          selectNode={setSelectedNode}
-          removeNode={removeLocalNode}
-          onSwitchButtonClick={switchNode}
-          onAddButtonClick={showAddNodeModal}
-          onCloseButtonClick={close}
-        />
-      </CSSTransition>
+      {nodeSections && (
+        <CSSTransition in={isNodesOpen} timeout={AnimationTimeout.Default} mountOnEnter unmountOnExit>
+          <NodesPopup
+            chain={chain}
+            isLoading={isNodesLoading}
+            nodeAddress={nodeAddress}
+            nodeSections={nodeSections}
+            selectedNode={selectedNode}
+            selectNode={setSelectedNode}
+            removeNode={removeNode}
+            onSwitchButtonClick={switchNode}
+            onAddButtonClick={showAddNodeModal}
+            onCloseButtonClick={close}
+          />
+        </CSSTransition>
+      )}
     </div>
   );
 };

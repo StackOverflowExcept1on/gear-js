@@ -1,9 +1,8 @@
-import { NodeSection } from 'entities/node';
+import { NodeSections } from 'entities/node';
 
-const isNodeExists = (nodeSections: NodeSection[], nodeAddress: string) => {
-  const nodes = nodeSections.flatMap((section) => section.nodes);
-
-  return nodes.some((node) => node.address === nodeAddress);
-};
+const isNodeExists = (nodeSections: NodeSections, nodeAddress: string) =>
+  Object.values(nodeSections)
+    .flat()
+    .some((node) => node.address === nodeAddress);
 
 export { isNodeExists };

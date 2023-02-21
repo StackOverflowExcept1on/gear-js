@@ -1,11 +1,12 @@
 import { memo } from 'react';
-import { NodeSection } from 'entities/node';
+import { Node } from 'entities/node';
 
 import styles from './Section.module.scss';
 import { Node as NodeItem } from '../node';
 
 type Props = {
-  section: NodeSection;
+  heading: string;
+  nodes: Node[];
   nodeAddress: string;
   selectedNode: string;
   selectNode: (address: string) => void;
@@ -13,15 +14,14 @@ type Props = {
 };
 
 const Section = memo((props: Props) => {
-  const { section, nodeAddress, selectedNode, selectNode, removeLocalNode } = props;
+  const { heading, nodes, nodeAddress, selectedNode, selectNode, removeLocalNode } = props;
 
   const getNodes = () =>
-    section.nodes.map((node, index) => (
+    nodes.map(({ address, isCustom }) => (
       <NodeItem
-        // eslint-disable-next-line react/no-array-index-key
-        key={`${node.address}-${index}`}
-        address={node.address}
-        isCustom={node.isCustom}
+        key={address}
+        address={address}
+        isCustom={isCustom}
         nodeAddress={nodeAddress}
         selectedNode={selectedNode}
         selectNode={selectNode}
@@ -31,7 +31,7 @@ const Section = memo((props: Props) => {
 
   return (
     <li>
-      <h2 className={styles.caption}>{section.caption}</h2>
+      <h2 className={styles.caption}>{heading}</h2>
       <ul className={styles.sectionList}>{getNodes()}</ul>
     </li>
   );

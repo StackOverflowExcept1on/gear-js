@@ -1,74 +1,53 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useAlert } from '@gear-js/react-hooks';
 
 import { getNodes } from 'api';
-import { NodeSection } from 'entities/node';
-import { LocalStorage } from 'shared/config';
+import { NodeSections } from 'entities/node';
 
-import { concatNodes, isDevSection, getLocalNodes, getLocalNodesFromLS } from './helpers';
-import { DEVELOPMENT_SECTION } from '../model/consts';
+import { getLocalNodeSections, getMergedNodeSections } from './helpers';
 
 const useNodes = () => {
   const alert = useAlert();
 
   const [isNodesLoading, setIsNodesLoading] = useState(true);
-  const [nodeSections, setNodeSections] = useState<NodeSection[]>([]);
 
-  const setAllNodeSections = (sections: NodeSection[]) => {
-    const localNodes = getLocalNodesFromLS();
+  const [fetchedNodeSections, setFetchedNodeSections] = useState<NodeSections>();
+  const [localNodeSections, setLocalNodeSections] = useState(getLocalNodeSections());
 
-    const isDevSectionExist = sections.find(isDevSection);
+  const addNode = (chain: string, address: string) => {
+    const node = { isCustom: true, address };
 
-    const allNodes = isDevSectionExist
-      ? concatNodes(sections, localNodes)
-      : sections.concat({ caption: DEVELOPMENT_SECTION, nodes: localNodes });
-
-    setNodeSections(allNodes);
+    setLocalNodeSections((prevNodeSections) =>
+      prevNodeSections ? { ...prevNodeSections, [chain]: [...prevNodeSections[chain], node] } : prevNodeSections,
+    );
   };
 
-  const addLocalNode = useCallback(
-    (address: string) => {
-      const newLocalNode = { isCustom: true, address };
-
-      const allNodes = concatNodes(nodeSections, newLocalNode);
-
-      const devSection = allNodes.find(isDevSection);
-      const localNodes = devSection ? getLocalNodes(devSection.nodes) : [newLocalNode];
-
-      setNodeSections(allNodes);
-
-      localStorage.setItem(LocalStorage.Nodes, JSON.stringify(localNodes));
-    },
-    [nodeSections],
-  );
-
-  const removeLocalNode = useCallback(
-    (address: string) =>
-      setNodeSections((prevState) =>
-        prevState.map((section) => {
-          if (isDevSection(section)) {
-            const filtredNodes = section.nodes.filter((node) => node.address !== address);
-
-            localStorage.setItem(LocalStorage.Nodes, JSON.stringify(filtredNodes.filter(({ isCustom }) => isCustom)));
-
-            return { caption: section.caption, nodes: filtredNodes };
-          }
-
-          return section;
-        }),
-      ),
-    [],
-  );
+  const removeNode = (chain: string, address: string) => {
+    setLocalNodeSections((prevNodeSections) =>
+      prevNodeSections
+        ? { ...prevNodeSections, [chain]: prevNodeSections[chain].filter((node) => node.address !== address) }
+        : prevNodeSections,
+    );
+  };
 
   useEffect(() => {
     getNodes()
-      .then(setAllNodeSections)
-      .catch((error) => alert.error(error.message))
+      .then((result) => setFetchedNodeSections(result))
+      .catch(({ message }: Error) => alert.error(message))
       .finally(() => setIsNodesLoading(false));
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return { isNodesLoading, nodeSections, addLocalNode, removeLocalNode };
+  const nodeSections = useMemo(
+    () =>
+      fetchedNodeSections && localNodeSections
+        ? getMergedNodeSections(fetchedNodeSections, localNodeSections)
+        : fetchedNodeSections,
+    [fetchedNodeSections, localNodeSections],
+  );
+
+  return { isNodesLoading, nodeSections, addNode, removeNode };
 };
 
 export { useNodes };

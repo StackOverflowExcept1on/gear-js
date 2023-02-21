@@ -1,17 +1,17 @@
 import { useEffect } from 'react';
 import SimpleBar from 'simplebar-react';
 
-import { NodeSection } from 'entities/node';
+import { NodeSections } from 'entities/node';
 
-import styles from './NodesList.module.scss';
 import { Section } from '../section';
+import styles from './NodesList.module.scss';
 
 type Props = {
   nodeAddress: string;
-  nodeSections: NodeSection[];
+  nodeSections: NodeSections;
   selectedNode: string;
   selectNode: (address: string) => void;
-  removeLocalNode: (address: string) => void;
+  removeLocalNode: (chain: string, address: string) => void;
 };
 
 const NodesList = (props: Props) => {
@@ -25,15 +25,15 @@ const NodesList = (props: Props) => {
   return (
     <SimpleBar className={styles.simpleBar}>
       <ul className={styles.list}>
-        {nodeSections.map((section, index) => (
+        {Object.entries(nodeSections).map(([chain, nodes]) => (
           <Section
-            // eslint-disable-next-line react/no-array-index-key
-            key={`${section.caption}-${index}`}
-            section={section}
+            key={chain}
+            heading={chain}
+            nodes={nodes}
             nodeAddress={nodeAddress}
             selectedNode={selectedNode}
             selectNode={selectNode}
-            removeLocalNode={removeLocalNode}
+            removeLocalNode={(address: string) => removeLocalNode(chain, address)}
           />
         ))}
       </ul>
