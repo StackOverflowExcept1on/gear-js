@@ -1,6 +1,6 @@
+import * as assert from 'assert';
 import { TypeRegistry, u64 } from '@polkadot/types';
 import { BlockNumber } from '@polkadot/types/interfaces';
-import assert from 'assert';
 
 export default (
   memory: WebAssembly.Memory,

@@ -1,23 +1,24 @@
+import * as assert from 'assert';
 import { Codec, Registry } from '@polkadot/types/types';
 import { PortableRegistry, TypeRegistry } from '@polkadot/types';
 import { Si1LookupTypeId, Si1TypeDef } from '@polkadot/types/interfaces';
 import { HexString } from '@polkadot/util/types';
-import assert from 'assert';
 import { hexToU8a } from '@polkadot/util';
 
 import { TypeStructure } from '../../types';
-
-export class GearMetadata {
+import { gearTypes } from '../default';
+export class GMetadata {
   private registry: Registry;
   private regTypes: Map<number, { name: string; def: any }>;
   portableRegistry: PortableRegistry;
 
-  constructor(hexRegistry: HexString) {
+  constructor(hexRegistry: HexString, withDefaultTypes = false) {
     this.registry = new TypeRegistry();
     this.portableRegistry = new PortableRegistry(this.registry, hexToU8a(hexRegistry), true);
     this.regTypes = new Map();
     this.prepare();
     this.registerTypes();
+    withDefaultTypes && this.registerDefaultTypes();
   }
 
   private prepare() {
@@ -27,8 +28,9 @@ export class GearMetadata {
       if (name !== undefined) {
         this.regTypes.set(type.id.toNumber(), { name: this.portableRegistry.getName(type.id), def: typeDef.type });
       } else {
-        assert(
-          typeDef.lookupIndex === type.id.toNumber(),
+        assert.equal(
+          typeDef.lookupIndex,
+          type.id.toNumber(),
           'Lookup index of type is not equal to index in portable registry',
         );
         this.regTypes.set(typeDef.lookupIndex, { name: typeDef.type, def: null });
@@ -47,7 +49,12 @@ export class GearMetadata {
     this.registry.register(types);
   }
 
-  createType(typeIndex: number, payload: unknown): Codec {
+  private registerDefaultTypes() {
+    this.registry.setKnownTypes({ types: gearTypes });
+    this.registry.register(gearTypes);
+  }
+
+  createType<T extends Codec = Codec>(typeIndex: number, payload: unknown): T {
     const type = this.regTypes.get(typeIndex);
     assert.notStrictEqual(type, undefined, `Type with index ${typeIndex} not found in registered types`);
     return this.registry.createType(type.name, payload);
@@ -165,7 +172,7 @@ export class GearMetadata {
       return additionalFields
         ? {
             name,
-            kind: this.isOption(name, def) ? 'option' : 'variant',
+            kind: isOption(name, def) ? 'option' : 'variant',
             type: _variants,
           }
         : { _variants };
@@ -222,19 +229,27 @@ export class GearMetadata {
     return this.registry.knownTypes.types;
   }
 
-  private isOption(typeName: string, typeDef: Si1TypeDef) {
-    if (!typeDef.isVariant) {
-      return false;
+  getTypeIndexByName(typeName: string): number | null {
+    for (const [index, { name }] of this.regTypes.entries()) {
+      if (name !== typeName) continue;
+      return index;
     }
-    if (!/^Option<[\w\d]+>$/.test(typeName)) {
-      return false;
-    }
-    if (
-      typeDef.asVariant.variants.length !== 2 ||
-      typeDef.asVariant.variants.filter((v) => v.name.eq('Some') || v.name.eq('None')).length !== 2
-    ) {
-      return false;
-    }
-    return true;
+    return null;
   }
+}
+
+function isOption(typeName: string, typeDef: Si1TypeDef) {
+  if (!typeDef.isVariant) {
+    return false;
+  }
+  if (!/^Option<[\w\d]+>$/.test(typeName)) {
+    return false;
+  }
+  if (
+    typeDef.asVariant.variants.length !== 2 ||
+    typeDef.asVariant.variants.filter((v) => v.name.eq('Some') || v.name.eq('None')).length !== 2
+  ) {
+    return false;
+  }
+  return true;
 }

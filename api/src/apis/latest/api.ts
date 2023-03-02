@@ -1,5 +1,5 @@
-import { GApi } from '../base';
+import * as Base from '../base';
 
-declare class Api extends GApi {}
+declare class Api extends Base.GApi {}
 
 export default Api;

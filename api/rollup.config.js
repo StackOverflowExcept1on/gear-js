@@ -2,7 +2,7 @@ import { cpSync, writeFileSync } from 'fs';
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import nodeResolve from '@rollup/plugin-node-resolve';
-import typescript from 'rollup-plugin-typescript2';
+import typescript from '@rollup/plugin-typescript';
 
 function writePackageJson() {
   return {
@@ -34,18 +34,16 @@ export default [
     ],
 
     plugins: [
+      typescript({
+        tsconfig: 'tsconfig.json',
+      }),
       json(),
       nodeResolve({
         preferBuiltins: true,
         resolveOnly: (module) => !module.includes('polkadot') && !module.includes('rxjs'),
       }),
-      typescript({
-        tsconfig: 'tsconfig.json',
-        useTsconfigDeclarationDir: true,
-      }),
     ],
   },
-
   {
     input: 'src/index.ts',
     output: [

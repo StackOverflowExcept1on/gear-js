@@ -3,7 +3,7 @@ import fs from 'fs';
 import { join } from 'path';
 import yaml from 'js-yaml';
 
-import { CreateType, decodeHexTypes, getWasmMetadata } from '../src';
+import { CreateType } from '../src';
 import { GEAR_EXAMPLES_WASM_DIR } from './config';
 
 const testFiles = fs.readdirSync('test/spec/meta');

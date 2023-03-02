@@ -1,6 +1,7 @@
 {
   "presets": [
     [
+      "@babel/preset-typescript",
       "@babel/preset-env",
       {
         "targets": {
@@ -8,7 +9,6 @@
         }
       }
     ],
-    "jest",
-    "@babel/preset-typescript"
+    "jest"
   ]
 }

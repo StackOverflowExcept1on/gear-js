@@ -1,9 +1,10 @@
 import { isHex, isU8a, u8aToHex } from '@polkadot/util';
+import { Codec } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
 
 import { isProgramMeta, isStateMeta } from '../common/metadata/is';
-import { CreateType } from '../common/create-type/CreateType';
-import { GearMetadata } from '../common/metadata/metadata';
+import { CreateType } from '../common/metadata/createType';
+import { GMetadata } from '../common/metadata/metadata';
 import { HumanProgramMetadataRepr } from '../types';
 
 export function getRegistry(metaOrHexRegistry: HexString): HexString {
@@ -16,7 +17,7 @@ export function getRegistry(metaOrHexRegistry: HexString): HexString {
   }
 }
 
-export function encodePayload<M extends GearMetadata = GearMetadata>(
+export function encodePayload<M extends GMetadata = GMetadata>(
   payload: unknown,
   hexRegistryOrMeta: HexString | M,
   type: keyof Omit<HumanProgramMetadataRepr, 'reg' | 'state' | 'signal'>,
@@ -40,9 +41,9 @@ export function encodePayload<M extends GearMetadata = GearMetadata>(
     // TODO
   } else if (isHex(hexRegistryOrMeta)) {
     if (typeof typeIndexOrMessageType === 'number') {
-      return new GearMetadata(hexRegistryOrMeta).createType(typeIndexOrMessageType, payload).toHex();
+      return new GMetadata(hexRegistryOrMeta).createType(typeIndexOrMessageType, payload).toHex();
     } else {
-      return CreateType.create(typeIndexOrMessageType, payload, hexRegistryOrMeta).toHex();
+      return (CreateType.create(typeIndexOrMessageType, payload, hexRegistryOrMeta) as Codec).toHex();
     }
   }
 }

@@ -3,9 +3,9 @@ import { HexString } from '@polkadot/util/types';
 import { KeyringPair } from '@polkadot/keyring/types';
 
 import {
-  GearApi,
-  GearKeyring,
-  GearTransaction,
+  GApi,
+  GKeyring,
+  GTransaction,
   IGearEvent,
   MessageEnqueued,
   MessageWaitedData,
@@ -14,7 +14,7 @@ import {
   UserMessageSentData,
 } from '../src';
 
-export const checkInit = (api: GearApi, programId: string) => {
+export const checkInit = (api: GApi, programId: string) => {
   let unsub: UnsubscribePromise;
   let messageId: HexString;
   const initPromise = new Promise((resolve, reject) => {
@@ -65,7 +65,7 @@ export const checkInit = (api: GearApi, programId: string) => {
   };
 };
 
-export function listenToUserMessageSent(api: GearApi, programId: HexString) {
+export function listenToUserMessageSent(api: GApi, programId: HexString) {
   const messages: UserMessageSent[] = [];
   const unsub = api.gearEvents.subscribeToGearEvent('UserMessageSent', (event) => {
     if (event.data.message.source.eq(programId)) {
@@ -99,7 +99,7 @@ export function listenToUserMessageSent(api: GearApi, programId: HexString) {
 }
 
 export async function sendTransaction<E extends keyof IGearEvent = keyof IGearEvent>(
-  submitted: GearTransaction | SubmittableExtrinsic<'promise'>,
+  submitted: GTransaction | SubmittableExtrinsic<'promise'>,
   account: KeyringPair,
   methodName: E,
 ): Promise<any> {
@@ -122,7 +122,7 @@ export async function sendTransaction<E extends keyof IGearEvent = keyof IGearEv
 }
 
 export const getAccount = () => {
-  return Promise.all([GearKeyring.fromSuri('//Alice'), GearKeyring.fromSuri('//Bob')]);
+  return Promise.all([GKeyring.fromSuri('//Alice'), GKeyring.fromSuri('//Bob')]);
 };
 
 export const sleep = (time: number) => new Promise((resolve) => setTimeout(resolve, time));
@@ -131,7 +131,7 @@ export const describeif = (condition: boolean) => (condition ? describe : descri
 
 export const testif = (condition: boolean) => (condition ? test : test.skip);
 
-export const listenToMessageWaited = (api: GearApi) => {
+export const listenToMessageWaited = (api: GApi) => {
   const messages: MessageWaitedData[] = [];
   const unsub = api.gearEvents.subscribeToGearEvent('MessageWaited', (event) => {
     messages.push(event.data);

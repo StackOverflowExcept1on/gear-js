@@ -33,7 +33,7 @@ export class GApi extends ApiPromise implements Base.GApi {
   public defaultTypes: Record<string, unknown>;
   public provider: WsProvider;
   public chain: string;
-  public totalissuance: u128;
+  public totalIssuance: u128;
   public nodeName: string;
   public nodeVersion: string;
 
@@ -83,7 +83,7 @@ export class GApi extends ApiPromise implements Base.GApi {
     this.code = new GCode(this);
     this.waitlist = new GWaitlist(this);
     this.chain = (await this.rpc.system.chain()).toHuman();
-    this.totalissuance = await this.query.balances.totalIssuance();
+    this.totalIssuance = await this.query.balances.totalIssuance();
     this.nodeName = (await this.rpc.system.name()).toHuman();
     this.nodeVersion = (await this.rpc.system.version()).toHuman();
   }

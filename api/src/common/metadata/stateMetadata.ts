@@ -1,9 +1,9 @@
 import { HumanStateMetadataRepr, StateFunctions, StateMetadataRepr } from '../../types';
-import { CreateType } from '../create-type/CreateType';
-import { GearMetadata } from './metadata';
+import { CreateType } from './createType';
+import { GMetadata } from './metadata';
 import importObj from '../wasm/importObj';
 
-export class StateMetadata extends GearMetadata {
+export class StateMetadata extends GMetadata {
   functions: StateFunctions;
 
   constructor({ reg, functions }: HumanStateMetadataRepr) {
@@ -40,7 +40,7 @@ export async function getStateMetadata(wasmBytes: Buffer | Uint8Array): Promise<
 
   exports.metadata();
 
-  const meta = CreateType.create<StateMetadataRepr>('StateMetadataRepr', await metadata, true);
+  const meta = CreateType.create<StateMetadataRepr>('StateMetadataRepr', await metadata);
 
   return new StateMetadata(meta.toJSON());
 }

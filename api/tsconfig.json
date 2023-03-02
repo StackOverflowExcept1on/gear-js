@@ -2,6 +2,7 @@
   "compilerOptions": {
     "lib": ["es5", "es6", "es7", "esnext", "dom"],
     "target": "esnext",
+    "module": "ESNext",
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": "./src",
@@ -11,6 +12,7 @@
     "pretty": true,
     "skipLibCheck": true,
     "declaration": true,
+    "declarationDir": "lib",
     "sourceMap": true
   },
   "include": ["src", "src/**/*.json"]
