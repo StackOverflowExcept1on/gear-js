@@ -69,6 +69,17 @@ export class GApi extends ApiPromise {
 
   protected async initialize() {
     await this.isReady;
+    this.program = new GProgram(this);
+    this.message = new GMessage(this);
+    this.balance = new GBalance(this);
+    this.gearEvents = new GEvents(this);
+    this.programState = new GProgramState(this);
+    this.blocks = new GBlock(this);
+    this.programStorage = new GProgramStorage(this);
+    this.claimValueFromMailbox = new GClaimValue(this);
+    this.mailbox = new GMailbox(this);
+    this.code = new GCode(this);
+    this.waitlist = new GWaitlist(this);
     this.chain = (await this.rpc.system.chain()).toHuman();
     this.totalIssuance = await this.query.balances.totalIssuance();
     this.nodeName = (await this.rpc.system.name()).toHuman();
