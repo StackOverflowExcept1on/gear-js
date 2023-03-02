@@ -2,10 +2,9 @@ import { HexString } from '@polkadot/util/types';
 import { UnsubscribePromise } from '@polkadot/api/types';
 
 import { IBalanceCallback, IGearEvent, ISystemAccountInfo, Transfer, UserMessageSent } from '../types';
-import { Base } from '../apis';
 import { GApi } from '../base';
 
-export class GEvents implements Base.GEvents {
+export class GEvents {
   constructor(private api: GApi) {}
 
   subscribeToGearEvent<M extends keyof IGearEvent>(

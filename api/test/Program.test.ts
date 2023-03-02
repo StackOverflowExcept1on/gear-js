@@ -5,11 +5,11 @@ import { bufferToU8a } from '@polkadot/util';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 
-import { GApi, Stable, getProgramMetadata } from '../src';
+import { Latest, getProgramMetadata } from '../src';
 import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { TARGET } from './config';
 
-const api: Stable.Api = new GApi();
+const api = new Latest.Api();
 
 let alice: KeyringPair;
 let codeId: HexString;

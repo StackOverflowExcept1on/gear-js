@@ -1,11 +1,10 @@
 import { SubmittableExtrinsic, UnsubscribePromise } from '@polkadot/api/types';
 import { ISubmittableResult } from '@polkadot/types/types';
 
-import { Base } from '../apis';
 import { DebugDataSnapshot } from '../types';
 import { GTransaction } from './transaction';
 
-export class GDebugMode extends GTransaction implements Base.GDebugMode {
+export class GDebugMode extends GTransaction {
   enabled: SubmittableExtrinsic<'promise', ISubmittableResult>;
 
   enable() {

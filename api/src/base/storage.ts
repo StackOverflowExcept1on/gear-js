@@ -4,10 +4,9 @@ import { u8aToU8a } from '@polkadot/util';
 
 import { ActiveProgram, IGearPages, ProgramMap } from '../types';
 import { ProgramDoesNotExistError, ProgramExitedError, ProgramTerminatedError } from '../common';
-import { Base } from '../apis';
 import { GApi } from './api';
 
-export class GProgramStorage implements Base.GProgramStorage {
+export class GProgramStorage {
   constructor(protected _api: GApi) {}
 
   /**

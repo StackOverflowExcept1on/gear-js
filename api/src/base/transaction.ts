@@ -3,12 +3,11 @@ import { Hash, RuntimeDispatchInfo } from '@polkadot/types/interfaces';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { isFunction } from '@polkadot/util';
 
-import { Base } from '../apis';
 import { GApi } from './api';
 import { TransactionError } from '../common';
 import { TransactionStatusCb } from '../types';
 
-export class GTransaction implements Base.GTransaction {
+export class GTransaction {
   extrinsic: SubmittableExtrinsic<'promise', ISubmittableResult>;
 
   constructor(protected _api: GApi) {}

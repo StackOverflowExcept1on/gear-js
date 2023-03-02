@@ -14,4 +14,4 @@ export { GProgramState } from './state';
 export { GProgramStorage } from './storage';
 export { GWaitlist } from './waitlist';
 export { GTransaction } from './transaction';
-export * from './events';
+export { GEvents } from './events';

@@ -20,12 +20,11 @@ import {
   validateGasLimit,
   validateValue,
 } from '../utils';
-import { Base } from '../apis';
 import { GApi } from './api';
 import { GGas } from './gas';
 import { GTransaction } from './transaction';
 
-export class GProgram extends GTransaction implements Base.GProgram {
+export class GProgram extends GTransaction {
   public calculateGas: GGas;
 
   constructor(protected _api: GApi) {

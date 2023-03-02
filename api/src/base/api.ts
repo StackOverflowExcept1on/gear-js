@@ -4,7 +4,6 @@ import { u128, u64 } from '@polkadot/types';
 import { RegistryError } from '@polkadot/types-codec/types';
 
 import { gearRpc, gearTypes } from '../common';
-import { Base } from '../apis';
 import { GBalance } from './balance';
 import { GBlock } from './blocks';
 import { GClaimValue } from './claim';
@@ -18,7 +17,7 @@ import { GProgramStorage } from './storage';
 import { GWaitlist } from './waitlist';
 import { GearApiOptions } from '../types';
 
-export class GApi extends ApiPromise implements Base.GApi {
+export class GApi extends ApiPromise {
   public program: GProgram;
   public programState: GProgramState;
   public programStorage: GProgramStorage;
@@ -70,18 +69,6 @@ export class GApi extends ApiPromise implements Base.GApi {
 
   protected async initialize() {
     await this.isReady;
-
-    this.program = new GProgram(this);
-    this.message = new GMessage(this);
-    this.balance = new GBalance(this);
-    this.gearEvents = new GEvents(this);
-    this.programState = new GProgramState(this);
-    this.blocks = new GBlock(this);
-    this.programStorage = new GProgramStorage(this);
-    this.claimValueFromMailbox = new GClaimValue(this);
-    this.mailbox = new GMailbox(this);
-    this.code = new GCode(this);
-    this.waitlist = new GWaitlist(this);
     this.chain = (await this.rpc.system.chain()).toHuman();
     this.totalIssuance = await this.query.balances.totalIssuance();
     this.nodeName = (await this.rpc.system.name()).toHuman();

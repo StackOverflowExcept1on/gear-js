@@ -1,11 +1,10 @@
 import { HexString } from '@polkadot/util/types';
 import { Option } from '@polkadot/types';
 
-import { Base } from '../apis';
 import { GApi } from './api';
 import { WaitlistItem } from '../types';
 
-export class GWaitlist implements Base.GWaitlist {
+export class GWaitlist {
   constructor(private _api: GApi) {}
 
   async readById(programId: HexString, messageId: HexString): Promise<WaitlistItem[]> {

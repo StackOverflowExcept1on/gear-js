@@ -2,12 +2,11 @@ import { HexString } from '@polkadot/util/types';
 import { isHex } from '@polkadot/util';
 
 import { GasInfo, PayloadType, Value } from '../types';
-import { Base } from '../apis';
 import { GApi } from './api';
 import { ProgramMetadata } from '../common';
 import { encodePayload } from '../utils/create-payload';
 
-export class GGas implements Base.GGas {
+export class GGas {
   constructor(private _api: GApi) {}
 
   /**

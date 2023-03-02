@@ -3,11 +3,10 @@ import { Balance } from '@polkadot/types/interfaces';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 
-import { Base } from '../apis';
 import { GTransaction } from './transaction';
 import { ISystemAccountInfo } from '../types';
 
-export class GBalance extends GTransaction implements Base.GBalance {
+export class GBalance extends GTransaction {
   async findOut(publicKey: string): Promise<Balance> {
     const { data: balance } = (await this._api.query.system.account(publicKey)) as ISystemAccountInfo;
     return this._api.createType('Balance', balance.free) as Balance;

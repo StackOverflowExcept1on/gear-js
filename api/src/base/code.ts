@@ -7,10 +7,9 @@ import { u8aToHex } from '@polkadot/util';
 import { CodeDoesNotExistError, getGrReply } from '../common';
 import { CodeMetadata, CodeStorage } from '../types';
 import { generateCodeHash, getIdsFromKeys, validateCodeId } from '../utils';
-import { Base } from '../apis';
 import { GTransaction } from './transaction';
 
-export class GCode extends GTransaction implements Base.GCode {
+export class GCode extends GTransaction {
   /**
    * ### Submit code without initialization
    * @param code

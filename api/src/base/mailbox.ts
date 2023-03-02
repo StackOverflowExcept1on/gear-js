@@ -2,16 +2,15 @@ import { AccountId32 } from '@polkadot/types/interfaces';
 import { HexString } from '@polkadot/util/types';
 import { Option } from '@polkadot/types';
 
-import { Base } from '../apis';
 import { GApi } from './api';
 import { GClaimValue } from './claim';
 import { MailboxItem } from '../types';
 
-export class GMailbox implements Base.GMailbox {
+export class GMailbox {
   public claimValue: GClaimValue;
 
   constructor(private api: GApi) {
-    this.claimValue = api.claimValueFromMailbox;
+    this.claimValue = new GClaimValue(api);
   }
 
   /**

@@ -1,5 +1,5 @@
-import * as Base from '../base';
+import Latest from '../latest';
 
-declare class Api extends Base.GApi {}
+class Api extends Latest.Api {}
 
 export default Api;

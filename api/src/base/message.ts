@@ -6,11 +6,18 @@ import { ReplaySubject } from 'rxjs';
 import { IMessageSendOptions, IMessageSendReplyOptions } from '../types';
 import { ProgramMetadata, SendMessageError, SendReplyError } from '../common';
 import { encodePayload, validateGasLimit, validateValue } from '../utils';
-import { Base } from '../apis';
+import { GApi } from './api';
+import { GEvents } from './events';
 import { GTransaction } from './transaction';
 import { UserMessageSentData } from '../types';
 
-export class GMessage extends GTransaction implements Base.GMessage {
+export class GMessage extends GTransaction {
+  private events: GEvents;
+
+  constructor(protected _api: GApi) {
+    super(_api);
+    this.events = new GEvents(_api);
+  }
   /**
    * ## Send Message
    * @param message
@@ -65,7 +72,7 @@ export class GMessage extends GTransaction implements Base.GMessage {
     const subject = new ReplaySubject<[HexString, UserMessageSentData]>(bufferSize);
     let messageId: HexString;
 
-    this._api.gearEvents
+    this.events
       .subscribeToGearEvent('UserMessageSent', ({ data }) => {
         if (data.message.source.eq(programId)) {
           if (data.message.details.isSome && data.message.details.unwrap().isReply) {

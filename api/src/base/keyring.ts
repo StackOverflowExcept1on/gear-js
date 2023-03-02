@@ -5,10 +5,9 @@ import { Keypair } from '@polkadot/util-crypto/types';
 import { Keyring } from '@polkadot/api';
 import { waitReady } from '@polkadot/wasm-crypto';
 
-import { Base } from '../apis';
 import { decodeAddress } from '../utils';
 
-export class GKeyring implements Base.GKeyring {
+export class GKeyring {
   private static unlock(keyring: KeyringPair, passphrase?: string) {
     if (keyring.isLocked) {
       keyring.unlock(passphrase);
