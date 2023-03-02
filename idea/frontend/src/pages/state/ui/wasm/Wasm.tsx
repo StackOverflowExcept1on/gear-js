@@ -1,35 +1,35 @@
-import { getStateMetadata, StateFunctions } from '@gear-js/api';
+import { getStateMetadata, StateFunctions, StateMetadata } from '@gear-js/api';
 import { Button, FileInput, Input, Textarea } from '@gear-js/ui';
 import { useAlert } from '@gear-js/react-hooks';
-import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Form } from 'react-final-form';
 import { OnChange } from 'react-final-form-listeners';
 import { FormApi } from 'final-form';
 
 import { addState, fetchState, fetchStates } from 'api';
-import { useStateRead } from 'hooks';
+import { useChain, useStateRead } from 'hooks';
+import { getPreformattedText, readFileAsync } from 'shared/helpers';
 import { FileTypes } from 'shared/config';
-import { checkFileFormat, getPreformattedText, readFileAsync, resetFileInput } from 'shared/helpers';
 import { BackButton } from 'shared/ui/backButton';
 import { Box } from 'shared/ui/box';
 import { FormPayload, getPayloadFormValues, getSubmitPayload } from 'features/formPayload';
 import { ReactComponent as ReadSVG } from 'shared/assets/images/actions/read.svg';
 
 import { IState, FormValues, INITIAL_VALUES } from '../../model';
-import { useProgramId, useMetadata } from '../../hooks';
+import { useProgramId } from '../../hooks';
 import { WasmStates } from '../wasmStates';
 import styles from './Wasm.module.scss';
 
 const Wasm = () => {
+  const { isDevChain } = useChain();
   const alert = useAlert();
 
   const programId = useProgramId();
-  const metadata = useMetadata(programId);
   const { state, isStateRead, isState, readWasmState, resetState } = useStateRead(programId);
 
-  const [isStateRequestReady, setIsStatesRequestReady] = useState(false);
+  const [metadata, setMetadata] = useState<StateMetadata>();
+  const [isStateRequestReady, setIsStatesRequestReady] = useState(!!isDevChain);
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File>();
   const [fileWasmBuffer, setFileWasmBuffer] = useState<Buffer>();
   const [fileFunctions, setFileFunctions] = useState<StateFunctions>();
@@ -45,6 +45,7 @@ const Wasm = () => {
   const { isFileFunction } = selectedFunction;
   const functionId = selectedFunction.id;
   const functionName = selectedFunction.name;
+  const wasmBuffer = isFileFunction ? fileWasmBuffer : uploadedWasmBuffer;
 
   const uploadedFunctions = uploadedState?.functions;
   const functions = isFileFunction ? fileFunctions : uploadedFunctions;
@@ -60,30 +61,11 @@ const Wasm = () => {
     [metadata, isTypeIndex, typeIndex, functionId],
   );
 
-  const resetFileInputValue = () => resetFileInput(fileInputRef.current);
-
-  const handleInputChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
-    const [result] = target.files || [];
-
-    if (!result) {
-      setFile(result);
-      return;
-    }
-
-    if (!checkFileFormat(result, FileTypes.Wasm)) {
-      alert.error('Wrong file format');
-
-      // TODO: remove after @gear-js/ui update,
-      // onChange should be called before inner setState
-      resetFileInputValue();
-
-      return;
-    }
-
-    setFile(result);
-  };
+  const resetFile = () => setFile(undefined);
 
   useEffect(() => {
+    if (isDevChain) return;
+
     fetchStates(programId)
       .then(({ result }) => setUploadedStates(result.states))
       .catch(({ message }: Error) => alert.error(message))
@@ -93,12 +75,13 @@ const Wasm = () => {
   }, []);
 
   useEffect(() => {
-    if (uploadedStateId) {
-      fetchState(uploadedStateId)
-        .then(({ result }) => Buffer.from(result.wasmBuffBase64, 'base64'))
-        .then((buffer) => setUploadedWasmBuffer(buffer))
-        .catch(({ message }: Error) => alert.error(message));
-    }
+    if (!uploadedStateId) return;
+
+    fetchState(uploadedStateId)
+      .then(({ result }) => Buffer.from(result.wasmBuffBase64, 'base64'))
+      .then((buffer) => setUploadedWasmBuffer(buffer))
+      .catch(({ message }: Error) => alert.error(message));
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uploadedStateId]);
 
@@ -122,19 +105,18 @@ const Wasm = () => {
     return addState({ programId, wasmBuffBase64, name })
       .then(({ result }) => {
         setUploadedStates((prevStates) => [...prevStates, result.state]);
-        resetFileInputValue();
+        resetFile();
       })
       .catch(({ message }: Error) => alert.error(message))
       .finally(() => setIsStatesRequestReady(true));
   };
 
   const handleSubmit = (values: FormValues) => {
-    const wasm = isFileFunction ? fileWasmBuffer : uploadedWasmBuffer;
+    if (!wasmBuffer) return;
+
     const payload = getSubmitPayload(values.payload);
 
-    if (!wasm) return;
-
-    readWasmState(wasm, functionName, payload);
+    readWasmState(wasmBuffer, functionName, payload);
   };
 
   const isUploadedFunctionSelected = !!functionName && !isFileFunction;
@@ -150,7 +132,7 @@ const Wasm = () => {
       })
       .catch(({ message }: Error) => {
         alert.error(message);
-        resetFileInputValue();
+        resetFile();
       });
   };
 
@@ -176,6 +158,7 @@ const Wasm = () => {
   const resetUploadedState = () => setUploadedState(undefined);
   const resetUploadedWasmBuffer = () => setUploadedWasmBuffer(undefined);
   const resetPayloadValue = () => formApi.current?.change('payload', payloadFormValues?.payload);
+  const resetMetadata = () => setMetadata(undefined);
 
   useEffect(() => {
     resetSelectedFunction();
@@ -192,6 +175,16 @@ const Wasm = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [functionId]);
+
+  useEffect(() => {
+    if (!wasmBuffer) return resetMetadata();
+
+    getStateMetadata(wasmBuffer)
+      .then((result) => setMetadata(result))
+      .catch(({ message }: Error) => alert.error(message));
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFileFunction, uploadedStateId, wasmBuffer]);
 
   return (
     <>
@@ -227,13 +220,12 @@ const Wasm = () => {
                 )}
 
                 <FileInput
-                  ref={fileInputRef}
+                  value={file}
                   size="large"
-                  // TODO: remove after @gear-js/ui update
-                  // @ts-ignore
                   color="secondary"
                   className={styles.input}
-                  onChange={handleInputChange}
+                  onChange={setFile}
+                  accept={FileTypes.Wasm}
                 />
 
                 <BackButton />

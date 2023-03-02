@@ -10,7 +10,7 @@ import {
 
 import { MetadataNotFound, ProgramNotFound } from '../common/errors';
 import { Meta, Program } from '../database/entities';
-import { CreateProgramInput, UpdateProgramDataInput } from './types';
+import { AddProgramMetaInput, CreateProgramInput } from './types';
 import { ProgramRepo } from './program.repo';
 import { ProgramStatus } from '../common/enums';
 
@@ -25,6 +25,18 @@ export class ProgramService {
       programs,
       count: total,
     };
+  }
+
+  public async addProgramsMetaByCode(
+    codeId: string,
+    genesis: string,
+    addProgramMetaInput :AddProgramMetaInput,
+  ): Promise<Program[]> {
+    const programs = await this.programRepository.listByCodeIdAndGenesis(codeId, genesis);
+    const { name, meta } = addProgramMetaInput;
+    const updatePrograms = programs.map(program => ({ ...program, meta, name }));
+
+    return this.programRepository.save(updatePrograms);
   }
 
   public async getProgramMeta(params: GetMetaParams): Promise<Meta> {
@@ -52,26 +64,6 @@ export class ProgramService {
     } catch (error) {
       this.logger.error(error, error.stack);
       return;
-    }
-  }
-
-  public async updateProgramData(updateProgramDataInput: UpdateProgramDataInput): Promise<IProgram> {
-    const { meta, id, genesis, name } = updateProgramDataInput;
-    const program = await this.programRepository.getByIdAndGenesis(id, genesis);
-
-    if (!program) {
-      throw new ProgramNotFound();
-    }
-
-    program.name = name;
-    program.meta = meta;
-
-    try {
-      const programs = await this.programRepository.save([program]);
-
-      return programs[0];
-    } catch (error) {
-      this.logger.error(error);
     }
   }
 

@@ -1,8 +1,8 @@
 import { AccountId32, BlockNumber } from '@polkadot/types/interfaces';
-import { BTreeMap,BTreeSet, Bool, GenericEventData, Option, Vec, u128, u32 } from '@polkadot/types';
+import { BTreeMap, BTreeSet, Bool, GenericEventData, Option, Vec, u128, u32 } from '@polkadot/types';
 import { CodeId, MessageId, ProgramId } from '../ids';
-import { Entry, UserMessageSentMessage } from '../message';
 import { GasNodeId, ReservationId } from 'types/interfaces/ids/gas';
+import { MessageEntry, UserMessageSentMessage } from '../message';
 import { ProgramDetails, QueuedDispatch } from './debug-data-snapshot';
 import { CodeChangeKind } from './code-changed';
 import { DispatchStatus } from './messages-dispatched';
@@ -11,18 +11,17 @@ import { MessageWokenReason } from './message-woken';
 import { ProgramChangedKind } from './program-changed';
 import { UserMessageReadReason } from './user-message-read';
 
-
 export class GearEventData extends GenericEventData {
   constructor(data: GenericEventData) {
     super(data.registry, data.toU8a(), data.meta, data.section, data.method);
   }
 }
 
-export interface MessageEnqueuedData extends GenericEventData {
+export interface MessageQueuedData extends GenericEventData {
   id: MessageId;
   source: AccountId32;
   destination: ProgramId;
-  entry: Entry;
+  entry: MessageEntry;
 }
 
 export interface UserMessageSentData extends GenericEventData {

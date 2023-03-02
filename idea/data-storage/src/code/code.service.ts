@@ -1,15 +1,16 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
-import { GetAllCodeParams, GetAllCodeResult, GetCodeParams } from '@gear-js/common';
+import { GetAllCodeParams, GetAllCodeResult, GetCodeParams, GetMetaByCodeParams } from '@gear-js/common';
 
-import { Code } from '../database/entities';
+import { Code, Meta } from '../database/entities';
 import { CodeRepo } from './code.repo';
-import { CodeNotFound } from '../common/errors';
+import { CodeNotFound, MetadataNotFound } from '../common/errors';
 import { CodeChangedInput, UpdateCodeInput } from './types';
 
 @Injectable()
 export class CodeService {
   private logger: Logger = new Logger(CodeService.name);
+
   constructor(private codeRepository: CodeRepo) {}
 
   public async getAllCode(params: GetAllCodeParams): Promise<GetAllCodeResult> {
@@ -29,6 +30,19 @@ export class CodeService {
     return code;
   }
 
+  public async getMeta(params: GetMetaByCodeParams): Promise<Meta> {
+    const { codeId, genesis } = params;
+    const code = await this.codeRepository.getByIdAndGenesis(codeId, genesis);
+
+    if (!code) {
+      throw new CodeNotFound();
+    }
+
+    if(code.meta === null) throw new MetadataNotFound();
+
+    return code.meta;
+  }
+
   public async updateCodes(updateCodesInput: UpdateCodeInput[] | CodeChangedInput[]): Promise<Code[]> {
     const updateCodes = [];
 
@@ -41,6 +55,7 @@ export class CodeService {
           ...code,
           status: updateCodeInput.status,
           expiration: updateCodeInput.expiration,
+          meta: updateCodeInput.meta
         });
 
         updateCodes.push(updateCode);
@@ -49,6 +64,7 @@ export class CodeService {
           ...updateCodeInput,
           name: updateCodeInput.id,
           timestamp: new Date(updateCodeInput.timestamp),
+          meta: updateCodeInput.meta
         });
 
         updateCodes.push(createCode);

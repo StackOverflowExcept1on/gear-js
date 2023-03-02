@@ -4,6 +4,6 @@ export class ProgramNotFound extends GearJsonRPCError {
   name = 'ProgramNotFound';
 }
 
-export class InvalidProgramMetaHex extends GearJsonRPCError {
-  name = 'InvalidProgramMetaHex';
+export class ProgramHasNoMeta extends GearJsonRPCError {
+  name = 'ProgramHasNoMeta';
 }

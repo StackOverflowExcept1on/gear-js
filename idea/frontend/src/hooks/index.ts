@@ -8,12 +8,11 @@ import { usePrograms } from './usePrograms';
 import { useCodeUpload } from './useCodeUpload';
 import { useMessageClaim } from './useMessageClaim';
 import { useProgramActions } from './useProgramActions';
-import { useMetadataUplaod } from './useMetadataUpload';
+import { useMetadataUpload } from './useMetadataUpload';
 import { useBalanceTransfer } from './useBalanceTransfer';
 import { useEventSubscriptions } from './useEventSubscriptions';
 import { useGasCalculate } from './useGasCalculate';
 import { useStateRead } from './useStateRead';
-import { usePrevious } from './usePrevious';
 import { useDataLoading } from './useDataLoading';
 import { useScrollLoader } from './useScrollLoader';
 import { useElementSizes } from './useElementSizes';
@@ -24,6 +23,7 @@ import { useIsProgramExists } from './useIsProgramExists';
 import { useLocalProgramsFilter } from './useLocalProgramsFilter';
 import { useNodeVersion } from './useNodeVersion';
 import { useMobileDisclaimer } from './useMobileDisclaimer';
+import { useMetaOnUpload } from './useMetaOnUpload';
 
 export {
   useApp,
@@ -36,7 +36,6 @@ export {
   useMessage,
   useMessages,
   useWaitlist,
-  usePrevious,
   useStateRead,
   useCodeUpload,
   useDataLoading,
@@ -48,7 +47,7 @@ export {
   useGasCalculate,
   useProgramActions,
   useMessageActions,
-  useMetadataUplaod,
+  useMetadataUpload,
   useBalanceTransfer,
   useEventSubscriptions,
   useCodes,
@@ -57,4 +56,5 @@ export {
   useLocalProgramsFilter,
   useNodeVersion,
   useMobileDisclaimer,
+  useMetaOnUpload,
 };

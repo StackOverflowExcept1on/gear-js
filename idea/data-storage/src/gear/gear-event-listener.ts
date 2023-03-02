@@ -1,19 +1,19 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { CodeChanged, GearApi, generateCodeHash, Hex, MessageEnqueued } from '@gear-js/api';
+import { CodeChanged, GearApi, generateCodeHash, MessageQueued } from '@gear-js/api';
+import { HexString } from '@polkadot/util/types';
 import { filterEvents } from '@polkadot/api/util';
 import { GenericEventData } from '@polkadot/types';
 import { ExtrinsicStatus } from '@polkadot/types/interfaces';
 import { SignedBlockExtended } from '@polkadot/api-derive/types';
 import { Keys } from '@gear-js/common';
 import { plainToClass } from 'class-transformer';
-import { blake2AsHex } from '@polkadot/util-crypto';
 
 import { ProgramService } from '../program/program.service';
 import { MessageService } from '../message/message.service';
 import { CodeService } from '../code/code.service';
-import { getPayloadAndValue, getPayloadByGearEvent } from '../common/helpers';
+import { getMetaHash, getPayloadAndValue, getPayloadByGearEvent } from '../common/helpers';
 import { Message } from '../database/entities';
-import { CodeStatus, MessageEntryPoint, MessageType, ProgramStatus } from '../common/enums';
+import { CodeStatus, MessageEntryPoint, MessageType } from '../common/enums';
 import { CodeRepo } from '../code/code.repo';
 import { CodeChangedInput, UpdateCodeInput } from '../code/types';
 import { changeStatus } from '../healthcheck/healthcheck.controller';
@@ -29,8 +29,8 @@ const { gear } = configuration();
 @Injectable()
 export class GearEventListener {
   private logger: Logger = new Logger(GearEventListener.name);
-  private api: GearApi;
-  public genesis: Hex;
+  public api: GearApi;
+  public genesis: HexString;
 
   constructor(
     private programService: ProgramService,
@@ -56,7 +56,7 @@ export class GearEventListener {
       const unsub = await this.listen();
 
       await new Promise((resolve) => {
-        this.api.on('error',  async (error) => {
+        this.api.on('error', async (error) => {
           await this.rabbitMQService.sendDeleteGenesis(this.genesis);
           changeStatus('gear');
           unsub();
@@ -65,16 +65,6 @@ export class GearEventListener {
       });
 
       this.logger.log('⚙️ 📡 Reconnecting to the gear node');
-    }
-  }
-
-  public async isValidMetaHex(hex: string, programId: string): Promise<boolean> {
-    try {
-      const metaHash = await this.api.program.metaHash(programId as Hex);
-      return metaHash === blake2AsHex(hex, 256);
-    } catch (error) {
-      this.logger.error(error);
-      return false;
     }
   }
 
@@ -132,7 +122,7 @@ export class GearEventListener {
         await this.messageService.createMessages([createMessageDBType]);
       },
       [Keys.ProgramChanged]: async () => {
-        if (payload.isActive) await this.programService.setStatus(id, genesis, ProgramStatus.ACTIVE);
+        await this.programService.setStatus(id, genesis, payload.programStatus);
       },
       [Keys.MessagesDispatched]: async () => {
         await this.messageService.setDispatchedStatus(payload);
@@ -177,7 +167,7 @@ export class GearEventListener {
     if (extrinsics.length >= 1) {
       for (const tx of extrinsics) {
         const foundEvent = filterEvents(tx.hash, block, block.events, status).events.find(({ event }) =>
-          this.api.events.gear.MessageEnqueued.is(event),
+          this.api.events.gear.MessageQueued.is(event),
         );
 
         if (!foundEvent) {
@@ -186,7 +176,7 @@ export class GearEventListener {
 
         const {
           data: { id, source, destination, entry },
-        } = foundEvent.event as MessageEnqueued;
+        } = foundEvent.event as MessageQueued;
 
         const [payload, value] = getPayloadAndValue(tx.args, tx.method.method);
 
@@ -222,7 +212,7 @@ export class GearEventListener {
     if (extrinsics.length >= 1) {
       for (const tx of extrinsics) {
         const foundEvent = filterEvents(tx.hash, block, block.events, status).events.find(({ event }) =>
-          this.api.events.gear.MessageEnqueued.is(event),
+          this.api.events.gear.MessageQueued.is(event),
         );
 
         if (!foundEvent) {
@@ -231,38 +221,27 @@ export class GearEventListener {
 
         const {
           data: { source, destination },
-        } = foundEvent.event as MessageEnqueued;
+        } = foundEvent.event as MessageQueued;
 
         const codeId = tx.method.method === 'uploadProgram' ? generateCodeHash(tx.args[0].toHex()) : tx.args[0].toHex();
-        const createProgram = {
+        const code = await this.codeRepository.get(codeId, this.genesis);
+
+        const createProgramInput: CreateProgramInput = {
           owner: source.toHex(),
           id: destination.toHex(),
           blockHash: block.createdAtHash.toHex(),
           timestamp,
-          code: await this.codeRepository.get(codeId, this.genesis),
+          code,
           genesis: this.genesis,
         };
 
-
-        try {
-          const metaHash = await this.api.program.metaHash(destination.toHex());
-
-          if(metaHash) {
-            const meta = await this.metaService.getByHash(metaHash);
-
-            if(meta){
-              Object.assign(createProgram, { meta });
-            } else {
-              const meta = await this.metaService.createMeta({ hash: metaHash });
-              Object.assign(createProgram, { meta });
-            }
-          }
-        } catch (error) {
-          this.logger.error(error);
+        if (code && code['meta'] !== null) {
+          createProgramInput.meta = code.meta;
         }
 
-        programs.push(createProgram);
+        programs.push(createProgramInput);
       }
+
       await this.programService.createPrograms(programs);
     }
   }
@@ -277,28 +256,36 @@ export class GearEventListener {
         const event = filterEvents(tx.hash, block, block.events, status).events.find(({ event }) =>
           this.api.events.gear.CodeChanged.is(event),
         );
+        let codeId = generateCodeHash(tx.args[0].toHex());
+        let metaHash = await getMetaHash(this.api.code, codeId);
 
         if (event) {
-          const {
-            data: { id, change },
-          } = event.event as CodeChanged;
-          const codeStatus = change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : null;
+          const { data: { id, change } } = event.event as CodeChanged;
+          codeId = id.toHex();
+          metaHash = await getMetaHash(this.api.code, codeId);
 
-          codes.push({
-            id: id.toHex(),
+          const codeStatus = change.isActive ? CodeStatus.ACTIVE : change.isInactive ? CodeStatus.INACTIVE : null;
+          const updateCodeInput = {
+            id: codeId,
             genesis: this.genesis,
             status: codeStatus,
             timestamp,
             blockHash: block.createdAtHash.toHex(),
             expiration: change.isActive ? change.asActive.expiration.toString() : null,
             uploadedBy: tx.signer.inner.toHex(),
-          });
+            meta: null,
+          };
+
+          if (metaHash) {
+            updateCodeInput.meta = await this.metaService.getByHashOrCreate(metaHash);
+          }
+
+          codes.push(updateCodeInput);
         } else {
-          const codeId = generateCodeHash(tx.args[0].toHex());
           const code = await this.codeRepository.get(codeId, this.genesis);
 
           if (!code) {
-            codes.push({
+            const updateCodeInput = {
               id: codeId,
               genesis: this.genesis,
               status: CodeStatus.ACTIVE,
@@ -306,7 +293,14 @@ export class GearEventListener {
               blockHash: block.createdAtHash.toHex(),
               expiration: null,
               uploadedBy: tx.signer.inner.toHex(),
-            });
+              meta: null,
+            };
+
+            if (metaHash) {
+              updateCodeInput.meta = await this.metaService.getByHashOrCreate(metaHash);
+            }
+
+            codes.push(updateCodeInput);
           }
         }
       }
@@ -315,7 +309,7 @@ export class GearEventListener {
     }
   }
 
-  private async handleBlocks(block: SignedBlockExtended, timestamp: number, blockHash: Hex) {
+  private async handleBlocks(block: SignedBlockExtended, timestamp: number, blockHash: HexString) {
     const blockNumber = block.block.header.toHuman().number as string;
 
     await this.blockService.createBlocks([

@@ -1,11 +1,12 @@
 import { UnsubscribePromise } from '@polkadot/api/types';
-import { GearApi, Hex, MessageEnqueued, MessagesDispatched, ProgramChanged } from '@gear-js/api';
+import { GearApi, MessageQueued, MessagesDispatched, ProgramChanged } from '@gear-js/api';
+import { HexString } from '@polkadot/util/types';
 
 import { Method } from 'entities/explorer';
 import { ProgramStatus } from 'entities/program';
 
 const waitForProgramInit = (api: GearApi, programId: string) => {
-  let messageId: Hex;
+  let messageId: HexString;
   let unsubPromise: UnsubscribePromise;
 
   const unsubscribe = async () => (await unsubPromise)();
@@ -14,8 +15,8 @@ const waitForProgramInit = (api: GearApi, programId: string) => {
     unsubPromise = api.query.system.events((events) => {
       events.forEach(({ event }) => {
         switch (event.method) {
-          case Method.MessageEnqueued: {
-            const meEvent = event as MessageEnqueued;
+          case Method.MessageQueued: {
+            const meEvent = event as MessageQueued;
 
             if (meEvent.data.destination.eq(programId) && meEvent.data.entry.isInit) {
               messageId = meEvent.data.id.toHex();
@@ -23,6 +24,7 @@ const waitForProgramInit = (api: GearApi, programId: string) => {
 
             break;
           }
+
           case Method.MessagesDispatched: {
             const mdEvent = event as MessagesDispatched;
 
@@ -35,15 +37,21 @@ const waitForProgramInit = (api: GearApi, programId: string) => {
 
             break;
           }
+
           case Method.ProgramChanged: {
             const pcEvent = event as ProgramChanged;
 
-            if (pcEvent.data.id.eq(programId) && pcEvent.data.change.isActive) {
-              resolve(ProgramStatus.Active);
+            if (pcEvent.data.id.eq(programId)) {
+              if (pcEvent.data.change.isActive) {
+                resolve(ProgramStatus.Active);
+              } else if (pcEvent.data.change.isPaused || pcEvent.data.change.isInactive) {
+                resolve(ProgramStatus.Exited);
+              }
             }
 
             break;
           }
+
           default:
             break;
         }

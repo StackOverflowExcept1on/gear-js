@@ -1,10 +1,12 @@
-import { Hex } from '@gear-js/api';
+import { HexString } from '@polkadot/util/types';
 
 import { CodeStatus } from '../../common/enums';
 import { BaseDataInput } from '../../gear/types';
+import { Meta } from '../../database/entities';
 
 export interface CodeChangedInput extends BaseDataInput {
-  id: Hex;
+  id: HexString;
   status: CodeStatus;
-  expiration: unknown
+  expiration: unknown;
+  meta?: Meta;
 }
