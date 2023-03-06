@@ -31,15 +31,11 @@ export class GApi extends ApiPromise {
   public blocks: GBlock;
   public defaultTypes: Record<string, unknown>;
   public provider: WsProvider;
-  public chain: string;
-  public totalIssuance: u128;
-  public nodeName: string;
-  public nodeVersion: string;
 
   constructor(options: GearApiOptions = {}) {
     const { types, providerAddress, ...restOptions } = options;
     const provider = restOptions?.provider || new WsProvider(providerAddress ?? 'ws://127.0.0.1:9944');
-    const defaultTypes = types ? { ...types, ...gearTypes } : gearTypes;
+    const defaultTypes = { ...gearTypes, ...(types || {}) };
 
     super({
       provider,
@@ -80,16 +76,28 @@ export class GApi extends ApiPromise {
     this.mailbox = new GMailbox(this);
     this.code = new GCode(this);
     this.waitlist = new GWaitlist(this);
-    this.chain = (await this.rpc.system.chain()).toHuman();
-    this.totalIssuance = await this.query.balances.totalIssuance();
-    this.nodeName = (await this.rpc.system.name()).toHuman();
-    this.nodeVersion = (await this.rpc.system.version()).toHuman();
   }
 
   static async create(options?: GearApiOptions): Promise<GApi> {
     const api = new GApi(options);
     await api.isReady;
     return api;
+  }
+
+  async totalIssuance(): Promise<string> {
+    return (await this.query.balances.totalIssuance()).toHuman() as string;
+  }
+
+  async chain(): Promise<string> {
+    return (await this.rpc.system.chain()).toHuman();
+  }
+
+  async nodeName(): Promise<string> {
+    return (await this.rpc.system.name()).toHuman();
+  }
+
+  async nodeVersion(): Promise<string> {
+    return (await this.rpc.system.version()).toHuman();
   }
 
   get existentialDeposit(): u128 {
@@ -127,15 +135,8 @@ interface NetworkSpec {
 
 export async function getSpec(address = 'ws://127.0.0.1:9944'): Promise<NetworkSpec> {
   const provider = new WsProvider(address);
-  provider.connect();
   await provider.isReady;
-  return new Promise((resolve) =>
-    provider.on('connected', () => {
-      provider.send('state_getRuntimeVersion', []).then(({ specVersion, specName }) => {
-        provider.disconnect().then(() => {
-          resolve({ specVersion, specName });
-        });
-      });
-    }),
-  );
+  const { specVersion, specName } = await provider.send('state_getRuntimeVersion', []);
+  await provider.disconnect();
+  return { specVersion, specName };
 }

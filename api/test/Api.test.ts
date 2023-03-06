@@ -1,14 +1,14 @@
-import { GApi, Stable, getSpec } from '../src';
+import { GApi, Latest, getSpec } from '../src';
 import { sleep } from './utilsFunctions';
 
-let api: Stable.Api;
+let api: GApi;
 
 afterAll(async () => {
   await api.disconnect();
   await sleep(2000);
 });
 
-describe('GearApi', () => {
+describe('Api', () => {
   test('get runtime spec', async () => {
     const spec = await getSpec();
     expect(spec).toHaveProperty('specName');
@@ -17,16 +17,16 @@ describe('GearApi', () => {
   });
 
   test('connect to api', async () => {
-    api = await GApi.create();
+    api = await Latest.Api.create();
     expect(api.isConnected).toBeTruthy();
   });
 
   test('chain', async () => {
-    expect(api.chain).toBe('Development');
+    expect(await api.chain()).toBe('Development');
   });
 
   test('nodeName', async () => {
-    expect(api.nodeName).toBe('Gear Node');
+    expect(await api.nodeName()).toBe('Gear Node');
   });
 
   test('runtimeChain', async () => {
@@ -38,11 +38,11 @@ describe('GearApi', () => {
   });
 
   test('nodeVersion', async () => {
-    expect(api.nodeVersion).toBeDefined();
+    expect(await api.nodeVersion()).toBeDefined();
   });
 
   test('totalIssuance', async () => {
-    expect(api.totalIssuance).toBeDefined();
+    expect(await api.totalIssuance()).toBeDefined();
   });
 
   test('existentialDeposit', () => {

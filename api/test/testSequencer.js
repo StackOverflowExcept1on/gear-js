@@ -11,7 +11,7 @@ export default class CustomSequencer extends Sequencer.default.default {
       if (test.path.includes('DebugMode')) {
         result[result.length - 1] = test;
         continue;
-      } else if (test.path.includes('GearApi')) {
+      } else if (test.path.includes('Api')) {
         result[0] = test;
         counter++;
         continue;

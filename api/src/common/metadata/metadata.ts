@@ -1,12 +1,13 @@
-import * as assert from 'assert';
 import { Codec, Registry } from '@polkadot/types/types';
 import { PortableRegistry, TypeRegistry } from '@polkadot/types';
 import { Si1LookupTypeId, Si1TypeDef } from '@polkadot/types/interfaces';
 import { HexString } from '@polkadot/util/types';
+import assert from 'assert/strict';
 import { hexToU8a } from '@polkadot/util';
 
 import { TypeStructure } from '../../types';
 import { gearTypes } from '../default';
+
 export class GMetadata {
   private registry: Registry;
   private regTypes: Map<number, { name: string; def: any }>;

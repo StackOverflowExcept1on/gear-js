@@ -36,6 +36,7 @@ export default [
     plugins: [
       typescript({
         tsconfig: 'tsconfig.json',
+        sourceMap: false,
       }),
       json(),
       nodeResolve({
@@ -58,6 +59,9 @@ export default [
     plugins: [
       typescript({
         tsconfig: 'tsconfig.cjs.json',
+        declaration: true,
+        declarationDir: 'lib/cjs',
+        sourceMap: false,
       }),
       json(),
       nodeResolve({

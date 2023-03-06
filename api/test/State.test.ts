@@ -3,11 +3,11 @@ import { KeyringPair } from '@polkadot/keyring/types';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 
-import { CreateType, GApi, Latest, StateMetadata, getProgramMetadata, getStateMetadata } from '../src';
+import { CreateType, Latest, StateMetadata, getProgramMetadata, getStateMetadata } from '../src';
 import { checkInit, getAccount, sleep } from './utilsFunctions';
 import { TARGET } from './config';
 
-const api: Latest.Api = new GApi();
+const api = new Latest.Api();
 let alice: KeyringPair;
 
 const code = readFileSync(join(TARGET, 'test_meta.opt.wasm'));
