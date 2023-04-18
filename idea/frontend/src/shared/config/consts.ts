@@ -29,6 +29,8 @@ const PROGRAM_ERRORS = {
   PROGRAM_INIT_FAILED: 'Program initialization failed',
 };
 
+const UPLOAD_METADATA_TIMEOUT = 2000;
+
 enum LocalStorage {
   Node = 'node',
   Nodes = 'nodes',
@@ -66,7 +68,9 @@ enum RpcMethods {
   GetProgram = 'program.data',
   GetAllPrograms = 'program.all',
   AddMetadata = 'program.meta.add',
+  AddProgramName = 'program.name.add',
   AddCodeMetadata = 'code.meta.add',
+  AddCodeName = 'code.name.add',
   GetMetadata = 'program.meta.get',
   GetCodeMetadata = 'code.meta.get',
   GetMessage = 'message.data',
@@ -78,7 +82,7 @@ enum RpcMethods {
   TestBalanceAvailable = 'testBalance.available',
   AddState = 'program.state.add',
   GetStates = 'program.state.all',
-  GetState = 'program.state.get',
+  GetState = 'state.get',
 }
 
 enum FileTypes {
@@ -108,6 +112,7 @@ export {
   GEAR_BALANCE_TRANSFER_VALUE,
   ACCOUNT_ERRORS,
   PROGRAM_ERRORS,
+  UPLOAD_METADATA_TIMEOUT,
   LocalStorage,
   GasMethod,
   TransactionName,

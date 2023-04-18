@@ -1,0 +1,12 @@
+[workspace]
+resolver = "2"
+
+members = [
+  "test-gas",
+  "test-waitlist",
+  "test-meta",
+]
+
+[profile.release]
+lto = true
+opt-level = 's'

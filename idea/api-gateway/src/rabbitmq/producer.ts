@@ -1,51 +1,47 @@
-import { IMessageDataStorageParams, IMessageTestBalanceParams } from './types';
-import { AMQP_METHODS, RabbitMQExchanges } from '@gear-js/common';
+import { RMQServices, RabbitMQExchanges } from '@gear-js/common';
 
-import { dataStorageChannels, mainChannelAMQP, testBalanceChannels } from './init-rabbitmq';
+import { indexerChannels, mainChannelAMQP, testBalanceChannels } from './init-rabbitmq';
+import { IRMQMessageParams } from './types';
 
-async function sendMessageToDataStorage(messageNetworkDSParams: IMessageDataStorageParams): Promise<void> {
-  const { genesis, params, correlationId, method } = messageNetworkDSParams;
-
-  const channel = dataStorageChannels.get(genesis);
+async function sendMsgToIndexer({ genesis, params, correlationId, method }: IRMQMessageParams): Promise<void> {
+  const channel = indexerChannels.get(genesis);
 
   channel.publish(
     RabbitMQExchanges.DIRECT_EX,
-    `ds.${genesis}`,
+    `${RMQServices.INDEXER}.${genesis}`,
     Buffer.from(JSON.stringify(params)),
-    { correlationId, headers: { method } });
+    {
+      correlationId,
+      headers: { method },
+    },
+  );
 }
 
-async function sendMessageToTestBalance(messageTestBalanceParams: IMessageTestBalanceParams): Promise<void> {
-  const { genesis, params, correlationId, method } = messageTestBalanceParams;
-
+async function sendMsgToTestBalance({ genesis, params, correlationId, method }: IRMQMessageParams): Promise<void> {
   const channel = testBalanceChannels.get(genesis);
 
   channel.publish(
     RabbitMQExchanges.DIRECT_EX,
-    `tb.${genesis}`,
+    `${RMQServices.TEST_BALANCE}.${genesis}`,
     Buffer.from(JSON.stringify(params)),
-    { correlationId, headers: { method } });
-}
-
-async function sendMessageTBGenesises(): Promise<void> {
-  mainChannelAMQP.publish(RabbitMQExchanges.TOPIC_EX,
-    'tb.genesises',
-    Buffer.from(''),
-    {  headers: { method: AMQP_METHODS.TEST_BALANCE_GENESISES } }
+    {
+      correlationId,
+      headers: { method },
+    },
   );
 }
 
-async function sendMessageDSGenesises(): Promise<void> {
-  mainChannelAMQP.publish(RabbitMQExchanges.TOPIC_EX,
-    'ds.genesises',
-    Buffer.from(''),
-    {  headers: { method: AMQP_METHODS.DATA_STORAGE_GENESISES } }
-  );
+async function sendMsgTBGenesises(): Promise<void> {
+  mainChannelAMQP.publish(RabbitMQExchanges.TOPIC_EX, `${RMQServices.TEST_BALANCE}.genesises`, Buffer.from(''));
+}
+
+async function sendMsgIndexerGenesises(): Promise<void> {
+  mainChannelAMQP.publish(RabbitMQExchanges.TOPIC_EX, `${RMQServices.INDEXER}.genesises`, Buffer.from(''));
 }
 
 export const producer = {
-  sendMessageToDataStorage,
-  sendMessageToTestBalance,
-  sendMessageTBGenesises,
-  sendMessageDSGenesises
+  sendMsgIndexerGenesises,
+  sendMsgTBGenesises,
+  sendMsgToIndexer,
+  sendMsgToTestBalance,
 };

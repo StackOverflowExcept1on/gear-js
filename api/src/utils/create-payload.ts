@@ -1,4 +1,4 @@
-import { isHex, isU8a, u8aToHex } from '@polkadot/util';
+import { hexToU8a, isHex, isU8a } from '@polkadot/util';
 import { Codec } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
 
@@ -22,28 +22,29 @@ export function encodePayload<M extends GMetadata = GMetadata>(
   hexRegistryOrMeta: HexString | M,
   type: keyof Omit<HumanProgramMetadataRepr, 'reg' | 'state' | 'signal'>,
   typeIndexOrMessageType?: number | string,
-): HexString {
+): Array<number> {
   if (payload === undefined) {
-    return '0x';
+    return [];
   }
 
   if (isHex(payload)) {
-    return payload;
+    return Array.from(hexToU8a(payload));
   }
 
   if (isU8a(payload)) {
-    return u8aToHex(payload);
+    return Array.from(payload);
   }
 
   if (isProgramMeta(hexRegistryOrMeta)) {
-    return hexRegistryOrMeta.createType(hexRegistryOrMeta.types[type].input, payload).toHex();
+    return Array.from(hexRegistryOrMeta.createType(hexRegistryOrMeta.types[type].input, payload).toU8a());
   } else if (isStateMeta(hexRegistryOrMeta)) {
     // TODO
   } else if (isHex(hexRegistryOrMeta)) {
     if (typeof typeIndexOrMessageType === 'number') {
-      return new GMetadata(hexRegistryOrMeta).createType(typeIndexOrMessageType, payload).toHex();
+      return Array.from(new GMetadata(hexRegistryOrMeta).createType(typeIndexOrMessageType, payload).toU8a());
     } else {
-      return (CreateType.create(typeIndexOrMessageType, payload, hexRegistryOrMeta) as Codec).toHex();
+      return Array.from((CreateType.create(typeIndexOrMessageType, payload, hexRegistryOrMeta) as Codec).toU8a());
     }
   }
+  return Array.from(CreateType.create('Bytes', payload).toU8a());
 }

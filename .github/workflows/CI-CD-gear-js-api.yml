@@ -10,68 +10,101 @@ on:
       - api/**
   workflow_dispatch:
 
+env: 
+  NIGHTLY_TOOLCHAIN_VERSION: ${{ vars.NIGHTLY_TOOLCHAIN_VERSION }}
+
 jobs:
   test:
     if: github.event_name == 'pull_request'
 
     runs-on: ubuntu-20.04
+    env: 
+      RUSTUP_HOME: /tmp/rustup_home
     steps:
       - name: Cancel previous workflow runs
         uses: styfle/cancel-workflow-action@0.4.0
         with:
           access_token: ${{ github.token }}
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - name: Install NodeJS 16.x
+      - name: "Install: NodeJS 18.x"
         uses: actions/setup-node@v3
         with:
-          node-version: 16.x
+          node-version: 18.x
 
-      - name: 'Install: Nightly toolchain'
+      - name: "Install: Set cargo path"
+        run: echo "/tmp/cargo/bin" >> $GITHUB_PATH
+
+      - name: "Install: Nightly toolchain"
         uses: actions-rs/toolchain@v1
         with:
           toolchain: nightly
-          components: clippy, rustfmt
           target: wasm32-unknown-unknown
+          components: llvm-tools-preview
+      
+      - name: "Install: Show specific nightly version"
+        if: ${{ env.NIGHTLY_TOOLCHAIN_VERSION != '' }}
+        run: echo $NIGHTLY_TOOLCHAIN_VERSION | sed 's/-/ - /g'
 
-      - name: Install dependencies
+      - name: "Install: Specific nightly toolchain"
+        if: ${{ env.NIGHTLY_TOOLCHAIN_VERSION != '' }}
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly-${{ env.NIGHTLY_TOOLCHAIN_VERSION }}
+          target: wasm32-unknown-unknown
+          components: llvm-tools-preview
+
+      - name: "Install: Pin to specific nightly toolchain"
+        if: ${{ env.NIGHTLY_TOOLCHAIN_VERSION != '' }}
+        run: |
+          rm -rf $RUSTUP_HOME/toolchains/nightly-x86_64-unknown-linux-gnu
+          ln -s $RUSTUP_HOME/toolchains/nightly-$NIGHTLY_TOOLCHAIN_VERSION-x86_64-unknown-linux-gnu $RUSTUP_HOME/toolchains/nightly-x86_64-unknown-linux-gnu
+      
+      - name: "Install: pkg dependencies"
         working-directory: api
         run: yarn install
 
-      - name: Build @gear-js/api
+      - name: "Build: @gear-js/api"
         working-directory: api
         run: yarn build
 
-      - name: Build test programs
-        working-directory: api/test/programs
+      - name: "Prepare: build programs"
+        working-directory: api/programs
         run: cargo build --release --locked
 
+<<<<<<< HEAD
       - name: Prepare
+=======
+      - name: "Prepare: download Gear examples"
+        working-directory: api/test/wasm
+        run: |
+          mkdir examples
+          cd examples
+          wget -O ./examples.tar.gz https://github.com/gear-tech/gear/releases/download/build/examples.tar.gz
+          tar -xvf examples.tar.gz
+
+      - name: "Prepare: run Gear node"
+>>>>>>> main
         run: |
           wget -O ./gear https://github.com/gear-tech/gear/releases/download/build/gear
           chmod +x gear
           nohup ./gear --dev --execution=wasm --tmp --unsafe-ws-external --unsafe-rpc-external --rpc-methods Unsafe --rpc-cors all &
 
-      - name: Run tests
+      - name: "Test: run"
         working-directory: api
         run: yarn test
-
-      - name: Build examples
-        if: ${{ contains(github.event.*.labels.*.name, 'api') }}
-        working-directory: api/examples
-        run: yarn build
 
   publish-to-npm:
     if: github.event_name == 'push'
 
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - name: Use node 16.x
-        uses: actions/setup-node@v2.1.5
+      - name: Use node 18.x
+        uses: actions/setup-node@v3
         with:
-          node-version: 16.x
+          node-version: 18.x
 
       - name: Check package version
         uses: EndBug/version-check@v1
@@ -82,10 +115,12 @@ jobs:
           static-checking: localIsNew
 
       - name: Install dependencies
+        if: steps.check.outputs.changed == 'true'
         working-directory: api
         run: yarn install
 
       - name: Build @gear-js/api
+        if: steps.check.outputs.changed == 'true'
         working-directory: api
         run: yarn build
 

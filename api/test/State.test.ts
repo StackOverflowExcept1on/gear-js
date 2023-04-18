@@ -4,8 +4,8 @@ import { join } from 'path';
 import { readFileSync } from 'fs';
 
 import { CreateType, Latest, StateMetadata, getProgramMetadata, getStateMetadata } from '../src';
+import { TARGET, TEST_META_META } from './config';
 import { checkInit, getAccount, sleep } from './utilsFunctions';
-import { TARGET } from './config';
 
 const api = new Latest.Api();
 let alice: KeyringPair;
@@ -19,7 +19,7 @@ let stateV1Meta: StateMetadata;
 const stateV2 = readFileSync(join(TARGET, 'test_meta_state_v2.meta.wasm'));
 let stateV2Meta: StateMetadata;
 
-const metaHex = `0x${readFileSync(join('test/programs/test-meta', 'meta.txt'), 'utf-8')}` as HexString;
+const metaHex = `0x${readFileSync(TEST_META_META, 'utf-8')}` as HexString;
 
 const meta = getProgramMetadata(metaHex);
 
@@ -155,6 +155,19 @@ describe('Read State', () => {
     expect(state.toJSON()).toMatchObject({
       id: { decimal: 0, hex: '0x00' },
       person: { surname: 'Surname0', name: 'Name0' },
+    });
+  });
+
+  test('Read state v2 wallet_by_u128', async () => {
+    expect(programId).toBeDefined();
+    const state = await api.programState.readUsingWasm(
+      { programId, fn_name: 'wallet_by_u128', wasm: stateV2, argument: 1 },
+      stateV2Meta,
+    );
+
+    expect(state.toJSON()).toMatchObject({
+      id: { decimal: 1, hex: '0x01' },
+      person: { surname: 'Surname1', name: 'Name1' },
     });
   });
 });

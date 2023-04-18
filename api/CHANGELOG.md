@@ -1,3 +1,54 @@
+## 0.30.6
+
+_04/17/2023_
+
+https://github.com/gear-tech/gear-js/pull/1262
+
+### Changes
+
+- Bump polkadot-js pkgs to `10.3.4` version
+
+## 0.30.4
+
+_03/31/2023_
+
+https://github.com/gear-tech/gear-js/pull/1248
+
+### Changes
+
+- Bump polkadot-js packages
+
+## 0.30.3
+
+_03/30/2023_
+
+https://github.com/gear-tech/gear-js/pull/1244
+
+### Changes
+
+- Add syscalls `gr_signal_from`, `gr_reply_push_input`, `gr_reply_input_wgas`, `gr_reply_input`, `gr_send_push_input`, `gr_send_input_wgas`, `gr_send_input`
+
+## 0.30.2
+
+_03/24/2023_
+
+https://github.com/gear-tech/gear-js/pull/1241
+
+### Changes
+
+- Use Bytes as default type, if meta or type wasn't specified.
+- Handle error in `program.metaHex` method
+
+## 0.30.1
+
+_03/10/2023_
+
+https://github.com/gear-tech/gear-js/pull/1226
+
+### Changes
+
+- Send payload as array of bytes instead of hex to avoid problem with endianness.
+
 ## 0.30.0
 
 _02/15/2023_

@@ -1,5 +1,5 @@
 import { IDates, IGenesis } from './common';
-import { IMessage, UpdateMessageData } from './message';
+import { IMessage } from './message';
 import { IPaginationParams } from './pagination';
 import { IProgram } from './program';
 import { IState } from './state';
@@ -24,7 +24,7 @@ interface GetAllProgramsParams extends IGenesis, IPaginationParams, SearchParam,
 }
 
 interface GetAllStateParams extends IGenesis, SearchParam {
-  programId: string,
+  programId: string;
 }
 
 interface GetAllCodeParams extends IGenesis, IPaginationParams, SearchParam, IDates {
@@ -38,16 +38,20 @@ interface FindProgramParams extends IGenesis, Pick<IProgram, 'id'> {
   owner?: string;
 }
 
-interface AddMetaByCodeParams extends IGenesis {
-  codeId: string;
+interface AddMetaByCodeParams extends IGenesis, Pick<ICode, 'id'> {
   metaHex: string;
-  name?: string;
 }
 
-interface AddMetaParams extends IGenesis {
-  programId: string;
+interface AddCodeNameParams extends IGenesis, Pick<ICode, 'id'> {
+  name: string;
+}
+
+interface AddMetaByProgramParams extends IGenesis, Pick<IProgram, 'id'> {
   metaHex: string;
-  name?: string;
+}
+
+interface AddProgramNameParams extends IGenesis, Pick<IProgram, 'id'> {
+  name: string;
 }
 
 interface AddStateParams extends IGenesis {
@@ -56,11 +60,9 @@ interface AddStateParams extends IGenesis {
   name: string;
 }
 
-interface UpdateMessagesParams {
-  params: UpdateMessageData[];
-}
+interface GetMetaByProgramParams extends IGenesis, Pick<IProgram, 'id'> {}
 
-interface GetMetaParams extends IGenesis, Pick<IProgram, 'id'> {}
+interface GetMetaByCodeParams extends IGenesis, Pick<ICode, 'id'> {}
 
 interface GetStateParams extends IGenesis, Pick<IState, 'id'> {}
 
@@ -69,10 +71,6 @@ interface GetCodeParams extends IGenesis, Pick<ICode, 'id'> {}
 interface GetStateByCodeParams extends IGenesis {
   codeId: string;
   stateId: string;
-}
-
-interface GetMetaByCodeParams extends IGenesis {
-  codeId: string;
 }
 
 interface GetTestBalanceParams extends IGenesis {
@@ -91,8 +89,8 @@ interface IRpcRequest {
   params:
     | FindProgramParams
     | GetAllProgramsParams
-    | AddMetaParams
-    | GetMetaParams
+    | AddMetaByProgramParams
+    | GetMetaByProgramParams
     | GetMessagesParams
     | GetCodeParams
     | GetAllCodeParams;
@@ -106,18 +104,19 @@ export {
   GetAllProgramsParams,
   GetAllUserProgramsParams,
   FindProgramParams,
-  AddMetaParams,
-  GetMetaParams,
+  AddMetaByProgramParams,
+  GetMetaByProgramParams,
   GetTestBalanceParams,
   SearchParam,
   IRpcRequest,
   GetCodeParams,
   GetAllCodeParams,
-  UpdateMessagesParams,
   AddStateParams,
   GetStateParams,
   GetAllStateParams,
   GetStateByCodeParams,
   GetMetaByCodeParams,
   AddMetaByCodeParams,
+  AddCodeNameParams,
+  AddProgramNameParams,
 };

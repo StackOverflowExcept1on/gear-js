@@ -8,6 +8,7 @@ import { IProgramCreateOptions, IProgramCreateResult, IProgramUploadOptions, IPr
 import {
   ProgramDoesNotExistError,
   ProgramExitedError,
+  ProgramHasNoMetahash,
   ProgramMetadata,
   ProgramTerminatedError,
   SubmitProgramError,
@@ -197,7 +198,7 @@ export class GProgram extends GTransaction {
   async codeHash(id: HexString): Promise<HexString> {
     const programOption = (await this._api.query.gearProgram.programStorage(id)) as Option<ProgramMap>;
 
-    if (programOption.isNone) throw new ProgramDoesNotExistError();
+    if (programOption.isNone) throw new ProgramDoesNotExistError(id);
 
     const program = programOption.unwrap()[0];
 
@@ -215,7 +216,19 @@ export class GProgram extends GTransaction {
    * @returns
    */
   async metaHash(programId: HexString, at?: HexString): Promise<HexString> {
-    const metaHash = (await this._api.rpc['gear'].readMetahash(programId, at || null)) as H256;
-    return metaHash.toHex();
+    try {
+      const metaHash = (await this._api.rpc['gear'].readMetahash(programId, at || null)) as H256;
+      return metaHash.toHex();
+    } catch (error) {
+      if (error.code === 8000) {
+        if (error.data.includes('Program not found')) {
+          throw new ProgramDoesNotExistError(programId);
+        }
+        if (error.data.includes('unreachable')) {
+          throw new ProgramHasNoMetahash(programId);
+        }
+      }
+      throw error;
+    }
   }
 }

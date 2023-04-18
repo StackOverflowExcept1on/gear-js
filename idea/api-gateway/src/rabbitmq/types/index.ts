@@ -1,43 +1,36 @@
+import {
+  AddMetaByProgramParams,
+  API_METHODS,
+  FindMessageParams,
+  FindProgramParams,
+  GetAllProgramsParams,
+  GetAllUserProgramsParams,
+  GetCodeParams,
+  GetIncomingMessagesParams,
+  GetMessagesParams,
+  GetMetaByProgramParams,
+  GetOutgoingMessagesParams,
+  GetTestBalanceParams,
+} from '@gear-js/common';
+
 export type Params =
-  | AddMetaParams
+  | AddMetaByProgramParams
   | FindMessageParams
   | FindProgramParams
   | GetAllProgramsParams
   | GetIncomingMessagesParams
   | GetMessagesParams
-  | GetMetaParams
+  | GetMetaByProgramParams
   | GetOutgoingMessagesParams
   | GetTestBalanceParams
   | GetAllUserProgramsParams
   | GetCodeParams
   | Record<string, any>
-  | string
+  | string;
 
-import {
-  AddMetaParams,
-  API_METHODS,
-  FindMessageParams,
-  FindProgramParams,
-  GetAllProgramsParams, GetAllUserProgramsParams, GetCodeParams,
-  GetIncomingMessagesParams,
-  GetMessagesParams,
-  GetMetaParams,
-  GetOutgoingMessagesParams,
-  GetTestBalanceParams,
-} from '@gear-js/common';
-
-interface IMessageDataStorageParams {
+export interface IRMQMessageParams {
   genesis: string;
   method: API_METHODS;
-  params: Record<string, any> | Params | string
+  params: Record<string, any> | Params | string;
   correlationId: string;
 }
-
-interface IMessageTestBalanceParams {
-  genesis: string;
-  params: any;
-  correlationId: string;
-  method: API_METHODS;
-}
-
-export { IMessageDataStorageParams, IMessageTestBalanceParams };
