@@ -5,8 +5,9 @@ import { readFileSync } from 'fs';
 import { getAccount, sendTransaction, sleep } from './utilsFunctions';
 import { Latest } from '../src';
 import { TARGET } from './config';
+import { WS_ADDRESS } from './config';
 
-const api = new Latest.Api();
+const api = new Latest.Api({ providerAddress: WS_ADDRESS });
 const accounts = {};
 const code = readFileSync(join(TARGET, 'test_waitlist.opt.wasm'));
 let codeId: HexString;
@@ -22,7 +23,7 @@ afterAll(async () => {
 });
 
 describe('Upload code', () => {
-  test('demo_sum', async () => {
+  test('Upload test_waitlist', async () => {
     const { codeHash } = await api.code.upload(code);
     expect(codeHash).toBeDefined();
     codeId = codeHash;

@@ -3,16 +3,8 @@ import { H256 } from '@polkadot/types/interfaces';
 import { HexString } from '@polkadot/util/types';
 import { randomAsHex } from '@polkadot/util-crypto';
 
-import { IProgram, ProgramMap } from '../types/interfaces';
 import { IProgramCreateOptions, IProgramCreateResult, IProgramUploadOptions, IProgramUploadResult } from '../types';
-import {
-  ProgramDoesNotExistError,
-  ProgramExitedError,
-  ProgramHasNoMetahash,
-  ProgramMetadata,
-  ProgramTerminatedError,
-  SubmitProgramError,
-} from '../common';
+import { ProgramDoesNotExistError, ProgramHasNoMetahash, ProgramMetadata, SubmitProgramError } from '../common';
 import {
   encodePayload,
   generateCodeHash,
@@ -24,6 +16,7 @@ import {
 import { GApi } from './api';
 import { GGas } from './gas';
 import { GTransaction } from './transaction';
+import { IProgram } from '../types/interfaces';
 
 export class GProgram extends GTransaction {
   public calculateGas: GGas;
@@ -66,11 +59,17 @@ export class GProgram extends GTransaction {
    */
   upload(args: IProgramUploadOptions, hexRegistry: HexString, typeIndex: number): IProgramUploadResult;
 
-  /** ### Upload program with code
+  /** ### Upload program with code using type name to encode payload
    * @param args
-   * @param metaOrHexRegistry Metadata
-   * @param typeIndexOrMessageType type index in registry or type name
+   * @param metaOrHexRegistry (optional) Metadata or hex registry
+   * @param typeName type name (one of the default rust types if metadata or registry don't specified)
    */
+  upload(
+    args: IProgramUploadOptions,
+    metaOrHexRegistry?: ProgramMetadata | HexString,
+    typeName?: string,
+  ): IProgramUploadResult;
+
   upload(
     args: IProgramUploadOptions,
     metaOrHexRegistry?: ProgramMetadata | HexString,
@@ -119,7 +118,7 @@ export class GProgram extends GTransaction {
   create(args: IProgramCreateOptions, meta?: ProgramMetadata, typeIndex?: number): IProgramCreateResult;
 
   /**
-   * ### Create program from uploaded on chain code using registry in hex format to encode payload
+   * ### Create program from uploaded on chain code using program metadata to encode payload
    * @param args Program parameters
    * @param hexRegistry Registry presented as Hex string
    * @param typeIndex Index of type in the registry.
@@ -127,21 +126,28 @@ export class GProgram extends GTransaction {
    */
 
   create(args: IProgramCreateOptions, hexRegistry: HexString, typeIndex: number): IProgramCreateResult;
+
   /** ## Create program using existed codeId
    * @param args
-   * @param metaOrHexRegistry Metadata
-   * @param typeIndexOrMessageType type index in registry or type name
+   * @param metaOrHexRegistry (optional) Metadata or hex registry in hex format
+   * @param type name type name (one of the default rust types if metadata or registry don't specified)
    */
+
+  create(
+    args: IProgramCreateOptions,
+    metaOrHexRegistry?: HexString | ProgramMetadata,
+    typeName?: number | string,
+  ): IProgramCreateResult;
 
   create(
     { codeId, initPayload, value, gasLimit, ...args }: IProgramCreateOptions,
     metaOrHexRegistry?: HexString | ProgramMetadata,
-    typeIndexOrMessageType?: number | string,
+    typeIndexOrTypeName?: number | string,
   ): IProgramCreateResult {
     validateValue(value, this._api);
     validateGasLimit(gasLimit, this._api);
 
-    const payload = encodePayload(initPayload, metaOrHexRegistry, 'init', typeIndexOrMessageType);
+    const payload = encodePayload(initPayload, metaOrHexRegistry, 'init', typeIndexOrTypeName);
     const salt = args.salt || randomAsHex(20);
 
     const programId = generateProgramId(codeId, salt);
@@ -196,17 +202,9 @@ export class GProgram extends GTransaction {
    * @returns codeHash of the program
    */
   async codeHash(id: HexString): Promise<HexString> {
-    const programOption = (await this._api.query.gearProgram.programStorage(id)) as Option<ProgramMap>;
+    const program = await this._api.programStorage.getProgram(id);
 
-    if (programOption.isNone) throw new ProgramDoesNotExistError(id);
-
-    const program = programOption.unwrap()[0];
-
-    if (program.isTerminated) throw new ProgramTerminatedError(id);
-
-    if (program.isExited) throw new ProgramExitedError(program.asExited.toHex());
-
-    return program.asActive.codeHash.toHex();
+    return program.codeHash.toHex();
   }
 
   /**

@@ -1,7 +1,16 @@
 import { GApi, Latest, getSpec } from '../src';
+import { WS_ADDRESS } from './config';
 import { sleep } from './utilsFunctions';
 
-let api: GApi;
+let api: GApi = new GApi({ providerAddress: WS_ADDRESS });
+
+beforeAll(async () => {
+  try {
+    await api.isReadyOrError;
+  } catch (error) {
+    process.exit(1);
+  }
+});
 
 afterAll(async () => {
   await api.disconnect();

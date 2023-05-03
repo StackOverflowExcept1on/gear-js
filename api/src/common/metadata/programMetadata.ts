@@ -1,5 +1,3 @@
-import { HexString } from '@polkadot/util/types';
-
 import { HumanProgramMetadataRepr, ProgramMetadataRepr } from '../../types';
 import { CreateType } from './createType';
 import { GMetadata } from './metadata';

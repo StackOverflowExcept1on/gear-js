@@ -3,11 +3,11 @@ import { KeyringPair } from '@polkadot/keyring/types';
 import { join } from 'path';
 
 import { CreateType, GApi, MessageWaitedData } from '../src';
+import { TARGET, WS_ADDRESS } from './config';
 import { checkInit, getAccount, listenToMessageWaited, sendTransaction, sleep } from './utilsFunctions';
-import { TARGET } from './config';
 import { readFileSync } from 'fs';
 
-const api = new GApi();
+const api = new GApi({ providerAddress: WS_ADDRESS });
 
 const CODE_PATH = join(TARGET, 'test_waitlist.opt.wasm');
 let alice: KeyringPair;

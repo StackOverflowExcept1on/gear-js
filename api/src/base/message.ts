@@ -7,17 +7,95 @@ import { IMessageSendOptions, IMessageSendReplyOptions } from '../types';
 import { ProgramMetadata, SendMessageError, SendReplyError } from '../common';
 import { encodePayload, validateGasLimit, validateValue } from '../utils';
 import { GApi } from './api';
-import { GEvents } from './events';
 import { GTransaction } from './transaction';
 import { UserMessageSentData } from '../types';
 
 export class GMessage extends GTransaction {
-  private events: GEvents;
-
   constructor(protected _api: GApi) {
     super(_api);
-    this.events = new GEvents(_api);
   }
+
+  /**
+   * ## Send Message
+   * @param args Message parameters
+   * @param meta Program metadata obtained using `getProgramMetadata` function.
+   * @param typeIndex (optional) Index of type in the registry. If not specified the type index from `meta.handle.input` will be used instead.
+   * @returns Submitted result
+   * ```javascript
+   * const programId = '0x..';
+   * const hexMeta = '0x...';
+   * const meta = getProgramMetadata(hexMeta);
+   *
+   * const tx = api.message.send({
+   *   destination: programId,
+   *   payload: { amazingPayload: { } },
+   *   gasLimit: 20_000_000
+   * }, meta, meta.handle.input)
+   *
+   * tx.signAndSend(account, (events) => {
+   *   events.forEach(({event}) => console.log(event.toHuman()))
+   * })
+   * ```
+   */
+  send(
+    args: IMessageSendOptions,
+    meta: ProgramMetadata,
+    typeIndex?: number,
+  ): SubmittableExtrinsic<'promise', ISubmittableResult>;
+
+  /**
+   * ## Send Message
+   * @param args Message parameters
+   * @param hexRegistry Registry in hex format
+   * @param typeIndex Index of type in the registry.
+   * @returns Submitted result
+   * ```javascript
+   * const programId = '0x..';
+   * const hexRegistry = '0x...';
+   *
+   * const tx = api.message.send({
+   *   destination: programId,
+   *   payload: { amazingPayload: { ... } },
+   *   gasLimit: 20_000_000
+   * }, hexRegistry, 4)
+   *
+   * tx.signAndSend(account, (events) => {
+   *   events.forEach(({event}) => console.log(event.toHuman()))
+   * })
+   * ```
+   */
+  send(
+    args: IMessageSendOptions,
+    hexRegistry: HexString,
+    typeIndex: number,
+  ): SubmittableExtrinsic<'promise', ISubmittableResult>;
+
+  /**
+   * ## Send Message
+   * @param args Message parameters
+   * @param metaOrHexRegistry (optional) Registry in hex format or ProgramMetadata
+   * @param typeName payload type (one of the default rust types if metadata or registry don't specified)
+   * @returns Submitted result
+   * ```javascript
+   * const programId = '0x..';
+   *
+   * const tx = api.message.send({
+   *   destination: programId,
+   *   payload: 'PING',
+   *   gasLimit: 20_000_000
+   * }, undefined, 'String')
+   *
+   * tx.signAndSend(account, (events) => {
+   *   events.forEach(({event}) => console.log(event.toHuman()))
+   * })
+   * ```
+   */
+  send(
+    args: IMessageSendOptions,
+    metaOrHexRegistry?: ProgramMetadata | HexString,
+    typeName?: string,
+  ): SubmittableExtrinsic<'promise', ISubmittableResult>;
+
   /**
    * ## Send Message
    * @param message
@@ -28,12 +106,12 @@ export class GMessage extends GTransaction {
   send(
     { destination, value, gasLimit, ...args }: IMessageSendOptions,
     metaOrHexRegistry?: ProgramMetadata | HexString,
-    typeIndexOrMessageType?: number | string,
+    typeIndexOrTypeName?: number | string,
   ): SubmittableExtrinsic<'promise', ISubmittableResult> {
     validateValue(value, this._api);
     validateGasLimit(gasLimit, this._api);
 
-    const payload = encodePayload(args.payload, metaOrHexRegistry, 'handle', typeIndexOrMessageType);
+    const payload = encodePayload(args.payload, metaOrHexRegistry, 'handle', typeIndexOrTypeName);
 
     try {
       this.extrinsic = this._api.tx.gear.sendMessage(destination, payload, gasLimit, value || 0);
@@ -42,6 +120,89 @@ export class GMessage extends GTransaction {
       throw new SendMessageError(error.message);
     }
   }
+
+  /**
+   * Sends reply message
+   * @param args Message parameters
+   * @param meta Program metadata obtained using `getProgramMetadata` function.
+   * @param typeIndex (optional) Index of type in the registry. If not specified the type index from `meta.reply.input` will be used instead.
+   * @returns Submitted result
+   * ```javascript
+   * const replyToMessage = '0x..';
+   * const hexMeta = '0x...';
+   * const meta = getProgramMetadata(hexMeta);
+   *
+   * const tx = api.message.send({
+   *   replyToId: replyToMessage,
+   *   payload: { amazingPayload: { } },
+   *   gasLimit: 20_000_000
+   * }, meta, meta.reply.input)
+   *
+   * tx.signAndSend(account, (events) => {
+   *   events.forEach(({event}) => console.log(event.toHuman()))
+   * })
+   * ```
+   */
+  sendReply(
+    args: IMessageSendReplyOptions,
+    meta?: ProgramMetadata,
+    typeIndex?: number,
+  ): SubmittableExtrinsic<'promise', ISubmittableResult>;
+
+  /**
+   * Sends reply message
+   * @param args Message parameters
+   * @param hexRegistry Registry in hex format
+   * @param typeIndex Index of type in the registry.
+   * @returns Submitted result
+   * ```javascript
+   * const replyToMessage = '0x..';
+   * const hexRegistry = '0x...';
+   *
+   * const tx = api.message.send({
+   *   replyToId: replyToMessage,
+   *   payload: { amazingPayload: { } },
+   *   gasLimit: 20_000_000
+   * }, hexRegistry, 5)
+   *
+   * tx.signAndSend(account, (events) => {
+   *   events.forEach(({event}) => console.log(event.toHuman()))
+   * })
+   * ```
+   */
+  sendReply(
+    args: IMessageSendReplyOptions,
+    hexRegistry: HexString,
+    typeIndex: number,
+  ): SubmittableExtrinsic<'promise', ISubmittableResult>;
+
+  /**
+   * Sends reply message
+   * @param args Message parameters
+   * @param metaOrHexRegistry (optional) Registry in hex format or ProgramMetadata
+   * @param typeName payload type (one of the default rust types if metadata or registry don't specified)
+   * @returns Submitted result
+   * ```javascript
+   * const replyToMessage = '0x..';
+   * const hexRegistry = '0x...';
+   *
+   * const tx = api.message.send({
+   *   replyToId: replyToMessage,
+   *   payload: { amazingPayload: { } },
+   *   gasLimit: 20_000_000
+   * }, hexRegistry, 5)
+   *
+   * tx.signAndSend(account, (events) => {
+   *   events.forEach(({event}) => console.log(event.toHuman()))
+   * })
+   * ```
+   */
+  sendReply(
+    args: IMessageSendReplyOptions,
+    metaOrHexRegistry?: ProgramMetadata | HexString,
+    typeName?: string,
+  ): SubmittableExtrinsic<'promise', ISubmittableResult>;
+
   /**
    * Sends reply message
    * @param args Message parameters
@@ -52,12 +213,12 @@ export class GMessage extends GTransaction {
   sendReply(
     { value, gasLimit, replyToId, ...args }: IMessageSendReplyOptions,
     metaOrHexRegistry?: ProgramMetadata | HexString,
-    typeIndexOrMessageType?: number | string,
+    typeIndexOrTypeName?: number | string,
   ): SubmittableExtrinsic<'promise', ISubmittableResult> {
     validateValue(value, this._api);
     validateGasLimit(gasLimit, this._api);
 
-    const payload = encodePayload(args.payload, metaOrHexRegistry, 'reply', typeIndexOrMessageType);
+    const payload = encodePayload(args.payload, metaOrHexRegistry, 'reply', typeIndexOrTypeName);
 
     try {
       this.extrinsic = this._api.tx.gear.sendReply(replyToId, payload, gasLimit, value);
@@ -72,7 +233,7 @@ export class GMessage extends GTransaction {
     const subject = new ReplaySubject<[HexString, UserMessageSentData]>(bufferSize);
     let messageId: HexString;
 
-    this.events
+    this._api.gearEvents
       .subscribeToGearEvent('UserMessageSent', ({ data }) => {
         if (data.message.source.eq(programId)) {
           if (data.message.details.isSome && data.message.details.unwrap().isReply) {

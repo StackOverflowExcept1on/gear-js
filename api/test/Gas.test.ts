@@ -5,12 +5,12 @@ import { readFileSync } from 'fs';
 import { u64 } from '@polkadot/types-codec';
 
 import { GApi, getProgramMetadata } from '../src';
-import { TARGET, TEST_GAS_META } from './config';
+import { TARGET, TEST_GAS_META, WS_ADDRESS } from './config';
 import { checkInit, getAccount, listenToUserMessageSent, sendTransaction, sleep } from './utilsFunctions';
 import { GasInfo } from '../src/types';
 import { decodeAddress } from '../src/utils';
 
-const api = new GApi();
+const api = new GApi({ providerAddress: WS_ADDRESS });
 let alice: KeyringPair;
 let aliceRaw: HexString;
 let programId: HexString;

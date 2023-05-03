@@ -1,5 +1,5 @@
 import { HumanStateMetadataRepr, StateFunctions, StateMetadataRepr } from '../../types';
-import { CreateType } from './createType';
+import { CreateType } from './create-type';
 import { GMetadata } from './metadata';
 import importObj from '../wasm/importObj';
 

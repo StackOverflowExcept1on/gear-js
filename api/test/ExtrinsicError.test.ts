@@ -3,8 +3,9 @@ import { RegistryError } from '@polkadot/types-codec/types';
 
 import { getAccount, sleep } from './utilsFunctions';
 import { GApi } from '../src';
+import { WS_ADDRESS } from './config';
 
-const api = new GApi();
+const api = new GApi({ providerAddress: WS_ADDRESS });
 let alice: KeyringPair;
 
 beforeAll(async () => {

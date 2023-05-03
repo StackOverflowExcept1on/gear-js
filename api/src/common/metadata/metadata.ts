@@ -232,8 +232,16 @@ export class GMetadata {
 
   getTypeIndexByName(typeName: string): number | null {
     for (const [index, { name }] of this.regTypes.entries()) {
-      if (name !== typeName) continue;
-      return index;
+      if (name.toLowerCase() === typeName.toLowerCase()) {
+        return index;
+      }
+    }
+    return null;
+  }
+
+  private isOption(typeName: string, typeDef: Si1TypeDef) {
+    if (!typeDef.isVariant) {
+      return false;
     }
     return null;
   }

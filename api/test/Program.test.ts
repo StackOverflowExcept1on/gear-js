@@ -6,10 +6,10 @@ import { join } from 'path';
 import { readFileSync } from 'fs';
 
 import { Latest, getProgramMetadata } from '../src';
-import { TARGET, TEST_META_META } from './config';
+import { TARGET, TEST_META_META, WS_ADDRESS } from './config';
 import { checkInit, getAccount, sendTransaction, sleep } from './utilsFunctions';
 
-const api = new Latest.Api();
+const api = new Latest.Api({ providerAddress: WS_ADDRESS });
 
 let alice: KeyringPair;
 let codeId: HexString;

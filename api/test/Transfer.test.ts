@@ -1,7 +1,8 @@
 import { GApi, TransferData } from '../src';
 import { getAccount, sleep } from './utilsFunctions';
+import { WS_ADDRESS } from './config';
 
-const api = new GApi();
+const api = new GApi({ providerAddress: WS_ADDRESS });
 let alice, bob;
 
 beforeAll(async () => {

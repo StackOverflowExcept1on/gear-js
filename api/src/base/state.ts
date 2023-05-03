@@ -1,3 +1,4 @@
+import { Bytes } from '@polkadot/types';
 import { Codec } from '@polkadot/types/types';
 import { HexString } from '@polkadot/util/types';
 
@@ -36,16 +37,13 @@ export class GProgramState extends GProgramStorage {
 
     const payload =
       fnTypes?.input !== undefined && fnTypes?.input !== null
-        ? meta.createType(fnTypes.input, args.argument).toHex()
-        : args.argument;
+        ? Array.from(meta.createType(fnTypes.input, args.argument).toU8a())
+        : null;
 
-    const state = await this._api.rpc['gear'].readStateUsingWasm(
-      args.programId,
-      args.fn_name,
-      CreateType.create('Bytes', args.wasm),
-      payload || null,
-      args.at || null,
-    );
+    const code = typeof args.wasm === 'string' ? args.wasm : CreateType.create<Bytes>('Bytes', Array.from(args.wasm));
+
+    const state = await this._api.rpc['gear'].readStateUsingWasm(args.programId, args.fn_name, code, payload, args.at);
+
     return meta && fnTypes ? meta.createType(fnTypes.output, state) : state;
   }
 }

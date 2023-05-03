@@ -16,7 +16,7 @@ export class GBlock {
   subscribeNewHeads: PromiseResult<() => Observable<HeaderExtended>>;
 
   constructor(private api: GApi) {
-    this.subscribeNewHeads = api.derive.chain.subscribeNewHeads;
+    this.subscribeNewHeads = api.derive.chain.subscribeNewHeads as PromiseResult<() => Observable<HeaderExtended>>;
   }
 
   /**
