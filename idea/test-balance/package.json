@@ -17,24 +17,24 @@
     "@polkadot/wasm-crypto": "7.2.1",
     "@types/amqplib": "0.8.2",
     "amqplib": "0.10.3",
-    "chalk": "4.1.2",
+    "chalk": "5.2.0",
     "class-transformer": "0.5.1",
     "express": "4.18.1",
     "nodemon": "2.0.16",
     "pg": "8.7.1",
-    "postgres": "1.0.2",
+    "postgres": "3.3.5",
     "typeorm": "0.3.9",
     "winston": "3.3.3"
   },
   "devDependencies": {
     "@types/express": "4.17.13",
-    "@typescript-eslint/eslint-plugin": "4.33.0",
-    "@typescript-eslint/parser": "4.33.0",
-    "dotenv": "10.0.0",
-    "eslint": "7.32.0",
+    "@typescript-eslint/eslint-plugin": "5.60.0",
+    "@typescript-eslint/parser": "5.60.0",
+    "dotenv": "16.3.1",
+    "eslint": "8.43.0",
     "eslint-config-prettier": "8.5.0",
-    "eslint-plugin-prettier": "3.4.1",
+    "eslint-plugin-prettier": "4.2.1",
     "ts-node-dev": "2.0.0",
-    "typescript": "4.7.4"
+    "typescript": "5.1.3"
   }
 }
