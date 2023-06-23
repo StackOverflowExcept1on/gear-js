@@ -2615,9 +2615,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@stackoverflowexcept1on/api@workspace:.":
+"@stackoverflowexcept1on/gear-api@workspace:.":
   version: 0.0.0-use.local
-  resolution: "@stackoverflowexcept1on/api@workspace:."
+  resolution: "@stackoverflowexcept1on/gear-api@workspace:."
   dependencies:
     "@babel/plugin-transform-typescript": 7.21.3
     "@babel/preset-env": 7.21.5
