@@ -103,5 +103,7 @@ export default (
     gr_send_push_input: () => {},
     gr_send_input_wgas: () => {},
     gr_send_input: () => {},
+    gr_is_getter_called: () => {},
+    gr_set_getter_called: () => {},
   },
 });
