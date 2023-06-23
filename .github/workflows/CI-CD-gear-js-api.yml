@@ -15,7 +15,7 @@ env:
 
 jobs:
   test:
-    if: github.event_name == 'pull_request'
+    # if: github.event_name == 'pull_request'
 
     runs-on: ubuntu-20.04
     env: 
@@ -91,7 +91,7 @@ jobs:
         run: yarn test
 
   publish-to-npm:
-    if: github.event_name == 'push'
+    # if: github.event_name == 'push'
 
     runs-on: ubuntu-20.04
     steps:
